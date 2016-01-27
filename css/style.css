@@ -19,6 +19,7 @@
 
 #tabs .tab-pane {
   padding: 10px;
+  padding-top: 20px;
 }
 
 #messages-container {
@@ -51,11 +52,15 @@
 }
 
 #note-labels {
-  color: #c0c0c0;
+  color: #bababa;
 }
 
-#note-labels > div.active {
+#note-labels .state-ON , #note-labels .state-GHOST{
   color: #ffffff;
+}
+
+#note-labels .state-SUSTAIN {
+  color: #d1dbf0;
 }
 
 

@@ -1,14 +1,17 @@
-var GHOST_DURATION = 500;
+var GHOST_DURATION = 1000;
 var DENSITY = 16;
 
-var FILL_OFF    = '#ffffff';
-var FILL_ON     = '#3b5998';
-var FILL_SUST   = '#3b5998';
-var FILL_GHOST  = '#3b5998';
-var STROKE_OFF  = '#c0c0c0';
-var STROKE_ON   = '#0e1f5b';
-var FILL_MAJ    = '#faf7db';
-var FILL_MIN    = '#eeebc9';
+var TONE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+var STATE_OFF = 0,
+    STATE_GHOST = 1,
+    STATE_SUST = 2,
+    STATE_ON = 3;
+var STATE_NAMES = ['OFF', 'GHOST', 'SUSTAIN', 'ON'];
+
+var FILL = ['#ffffff', '#aeaeae', '#46629e', '#2c4885'];
+var STROKE = ['#bababa', '#bababa', '#0e1f5b', '#0e1f5b'];
+var FILL_MAJ     = '#faf7db',
+    FILL_MIN     = '#eeebc9';
 
 var canvas, ctx;
 var W,  // width
@@ -19,11 +22,8 @@ var toneGrid = [];
 var tones = [];
 var pitches = {};
 
-var TONE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-var STATE_OFF = 'OFF',
-    STATE_ON = 'ON',
-    STATE_SUST = 'SUSTAIN',
-    STATE_GHOST = 'GHOST';
+var sustainEnabled = true,
+    sustain = false;
 
 var SQRT_3 = Math.sqrt(3);
 
@@ -57,16 +57,16 @@ function noteOff(pitch) {
     delete pitches[pitch];
     tones[i].count--;
     if (tones[i].count == 0) {
-      tones[i].release = new Date();
-      if (GHOST_DURATION > 0) {
-        tones[i].state = STATE_GHOST;
-        checkGhosts();
+      if (sustainEnabled && sustain) {
+        tones[i].state = STATE_SUST;
       } else {
-        tones[i].state = STATE_OFF;
+        // change state to STATE_GHOST or STATE_OFF
+        // depending on setting
+        releaseTone(tones[i]);
       }
     }
+    draw();
   }
-  draw();
 }
 
 function allNotesOff() {
@@ -78,6 +78,35 @@ function allNotesOff() {
   draw();
 }
 
+function sustainOn() {
+  sustain = true;
+}
+
+function sustainOff() {
+  sustain = false;
+
+  for (var i=0; i<12; i++) {
+    if (tones[i].state == STATE_SUST)
+      releaseTone(tones[i]);
+  }
+  draw();
+}
+
+function toggleSustainEnabled() {
+  sustainEnabled = !sustainEnabled;
+}
+
+
+function releaseTone(tone) {
+  tone.release = new Date();
+  if (GHOST_DURATION > 0) {
+    tone.state = STATE_GHOST;
+    ghosts();
+  } else {
+    tone.state = STATE_OFF;
+  }
+}
+
 
 var ghostsInterval = null;
 
@@ -86,31 +115,32 @@ var ghostsInterval = null;
  * checking using setInterval as long as there are
  * any ghost tones left.
  */
-function checkGhosts() {
-  var numAlive = 0, numDead = 0;
-  var now = new Date();
+function ghosts() {
+  if (ghostsInterval == null) {
+    ghostsInterval = setInterval(function() {
+      var numAlive = 0, numDead = 0;
+      var now = new Date();
 
-  for (var i=0; i<12; i++) {
-    if (tones[i].state == STATE_GHOST) {
-      if (now - tones[i].release >= GHOST_DURATION) {
-        tones[i].state = STATE_OFF;
-        numDead++;
-      } else {
-        numAlive++;
+      for (var i=0; i<12; i++) {
+        if (tones[i].state == STATE_GHOST) {
+          if (now - tones[i].release >= GHOST_DURATION) {
+            tones[i].state = STATE_OFF;
+            numDead++;
+          } else {
+            numAlive++;
+          }
+        }
       }
-    }
-  }
 
-  if (numAlive>0) {
-    if (ghostsInterval == null)
-      ghostsInterval = setInterval(checkGhosts, 50);
-  } else if (ghostsInterval != null) {
-    clearInterval(ghostsInterval);
-    ghostsInterval = null;
-  }
+      if (numAlive == 0) {
+        clearInterval(ghostsInterval);
+        ghostsInterval = null;
+      }
 
-  if (numDead>0)
-    draw();
+      if (numDead>0)
+        draw();
+    }, 50);
+  }
 }
 
 
@@ -135,18 +165,22 @@ function draw() {
     c.rightPos = getNeighborXYDiff(tone, rightNeighbor);
     c.topPos = getNeighborXYDiff(tone, topNeighbor);
 
-    c.thisOn = (tones[tone].state != STATE_OFF);
-    c.leftOn = (tones[leftNeighbor].state != STATE_OFF);
-    c.rightOn = (tones[rightNeighbor].state != STATE_OFF);
-    c.topOn = (tones[topNeighbor].state != STATE_OFF);
+    c.leftState = tones[leftNeighbor].state;
+    c.rightState = tones[rightNeighbor].state;
+    c.topState = tones[topNeighbor].state;
+
+    var thisOn = (tones[tone].state != STATE_OFF);
+    var leftOn = (c.leftState != STATE_OFF);
+    var rightOn = (c.rightState != STATE_OFF);
+    var topOn = (c.topState != STATE_OFF);
 
     // Fill faces
     for (var i=0; i<toneGrid[tone].length; i++) {
       setTranslate(ctx, toneGrid[tone][i].x, toneGrid[tone][i].y);
 
       var minorOn = false, majorOn = false;
-      if (c.thisOn && c.topOn) {
-        if (c.leftOn) { // left face (minor triad)
+      if (thisOn && topOn) {
+        if (leftOn) { // left face (minor triad)
           minorOn = true;
           ctx.beginPath();
           ctx.moveTo(0, 0);
@@ -156,7 +190,7 @@ function draw() {
           ctx.fillStyle = FILL_MIN;
           ctx.fill();
         }
-        if (c.rightOn) { // right face (major triad)
+        if (rightOn) { // right face (major triad)
           majorOn = true;
           ctx.beginPath();
           ctx.moveTo(0, 0);
@@ -173,13 +207,14 @@ function draw() {
   // Draw edges. Each vertex takes care of the three upward edges.
   for (var tone=0; tone<12; tone++) {
     var c = tones[tone].cache;
+    var state = tones[tone].state;
 
     for (var i=0; i<toneGrid[tone].length; i++) {
       setTranslate(ctx, toneGrid[tone][i].x, toneGrid[tone][i].y);
 
-      drawEdge(ctx, c.topPos, c.thisOn && c.topOn);
-      drawEdge(ctx, c.leftPos, c.thisOn && c.leftOn);
-      drawEdge(ctx, c.rightPos, c.thisOn && c.rightOn);
+      drawEdge(ctx, c.topPos, state, c.topState);
+      drawEdge(ctx, c.leftPos, state, c.leftState);
+      drawEdge(ctx, c.rightPos, state, c.rightState);
     }
   }
 
@@ -193,20 +228,14 @@ function draw() {
       ctx.arc(x, y, u/5, 0, Math.PI * 2, false);
       ctx.closePath();
 
-      ctx.strokeStyle = STROKE_ON;
-      ctx.lineWidth = 1.5;
+      ctx.fillStyle = FILL[tones[tone].state];
+      ctx.strokeStyle = STROKE[tones[tone].state];
+      toneGrid[tone][i].label.className = 'state-' + STATE_NAMES[tones[tone].state];
 
-      if (tones[tone].state == STATE_ON) {
-        ctx.fillStyle = FILL_ON;
-        toneGrid[tone][i].label.className = 'active';
-      } else if (tones[tone].state == STATE_GHOST) {
-        ctx.fillStyle = FILL_GHOST;
-        toneGrid[tone][i].label.className = 'active';
-      } else {
-        ctx.fillStyle = FILL_OFF;
-        ctx.strokeStyle = STROKE_OFF;
+      if (tones[tone].state == STATE_OFF) {
         ctx.lineWidth = 1;
-        toneGrid[tone][i].label.className = '';
+      } else {
+        ctx.lineWidth = 2;
       }
 
       ctx.fill();
@@ -219,12 +248,14 @@ function setTranslate(ctx, x, y) {
   ctx.setTransform(1, 0, 0, 1, x, y);
 }
 
-function drawEdge(ctx, endpoint, on) {
+function drawEdge(ctx, endpoint, state1, state2) {
+  var state = Math.min(state1, state2);
+
   ctx.beginPath();
   ctx.moveTo(0, 0);
   ctx.lineTo(endpoint.x, endpoint.y);
-  ctx.strokeStyle = on ? STROKE_ON : STROKE_OFF;
-  ctx.lineWidth = on ? 1.5 : 1;
+  ctx.strokeStyle = STROKE[state];
+  ctx.lineWidth = (state != STATE_OFF) ? 1.5 : 1;
   ctx.stroke();
 }
 
@@ -267,7 +298,7 @@ function init() {
 
   $(noteLabels).empty();
 
-  noteLabels.style.fontSize = u * 0.14 + "px";
+  noteLabels.style.fontSize = u * 0.17 + "px";
 
   var xUnit = u*Math.sqrt(3);
   var uW = Math.ceil(W/xUnit);

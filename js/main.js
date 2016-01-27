@@ -32,7 +32,8 @@ $(function(){
   $('#tabs').on('hidden.bs.collapse', function() { noTab(); });
   $('#tonnetz').click(function() { $('#tabs').collapse('hide'); });
 
-  $('#panic').click(function() { allNotesOff(); });
+  $('#panic').click(function() { allNotesOff(); sustainOff(); });
+  $('#enable-sustain').click(toggleSustainEnabled);
   $('#show-note-names').click(function() { $(noteLabels).toggle(); });
 });
 
@@ -137,8 +138,10 @@ function addMIDIPort(port) {
 var MIDI_NOTE_ON           = 0x90,
     MIDI_NOTE_OFF          = 0x80,
     MIDI_CONTROL_CHANGE    = 0xB0,
-    MIDI_CC_SUSTAIN        = 0x40,
-    MIDI_CC_ALL_NOTES_OFF  = 0x7B;
+
+    MIDI_CC_SUSTAIN             = 64,
+    MIDI_CC_ALL_CONTROLLERS_OFF = 121,
+    MIDI_CC_ALL_NOTES_OFF       = 123;
 
 function MIDIMessageEventListener(event) {
   var msg = event.data;
@@ -157,15 +160,18 @@ function MIDIMessageEventListener(event) {
       break;
     case MIDI_CONTROL_CHANGE:
       switch (msg[1]) {
+        case MIDI_CC_SUSTAIN:
+          if (msg[2] >= 64) {
+            sustainOn();
+          } else {
+            sustainOff();
+          }
+          break;
+        case MIDI_CC_ALL_CONTROLLERS_OFF:
+          sustainOff();
+          break;
         case MIDI_CC_ALL_NOTES_OFF:
           allNotesOff();
-          break;
-        case MIDI_CC_SUSTAIN:
-          if (msg[2]>=64) {
-            //sustainOn();
-          } else {
-            //sustainOff();
-          }
           break;
       }
       break;
