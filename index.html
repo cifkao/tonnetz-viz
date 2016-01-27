@@ -18,7 +18,7 @@
   </head>
   <body>
     <div class="container-fullwidth">
-      <nav class="navbar navbar-default navbar-static-top" id="navbar">
+      <nav class="navbar navbar-inverse navbar-static-top" id="navbar">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
@@ -53,9 +53,7 @@
         <div role="tabpanel" class="tab-pane" id="midi">
           <div class="form-group">
             <div class="row">
-              <div class="col-sm-1"></div>
-
-              <div class="col-xs-4 col-sm-5">
+              <div class="col-xs-4 col-sm-5 col-sm-offset-1">
                 <label for="midi-port" class="control-label">MIDI port</label>
                 <select class="form-control" name="midi-port" id="midi-port"></select>
               </div>
@@ -91,10 +89,29 @@
               </div>
             </div>
           </div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+                <div class="checkbox">
+                  <label><input name="enable-sustain" id="enable-sustain" type="checkbox" checked> Enable sustain pedal</label>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="appearance">
-          <input name="show-note-names" id="show-note-names" type="checkbox" checked> <label for="show-note-names">Show note names</label>
-          <input name="show-triad-names" id="show-triad-names" type="checkbox"> <label for="show-triad-names">Show triad names</label>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+                <div class="checkbox">
+                  <label><input name="show-note-names" id="show-note-names" type="checkbox" checked> Show note names</label>
+                </div>
+                <div class="checkbox">
+                  <label><input name="show-triad-names" id="show-triad-names" type="checkbox"> Show triad names</label>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -114,7 +131,6 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/BinaryHeap.js"></script>
     <script type="text/javascript" src="js/tonnetz.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
   </body>
