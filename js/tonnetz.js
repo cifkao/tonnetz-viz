@@ -1,4 +1,4 @@
-var GHOST_DURATION = 1000;
+var GHOST_DURATION = 500;
 var DENSITY = 16;
 
 var TONE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
@@ -298,7 +298,7 @@ function init() {
 
   $(noteLabels).empty();
 
-  noteLabels.style.fontSize = u * 0.17 + "px";
+  $(noteLabels).css('font-size', u * 0.17 + 'px');
 
   var xUnit = u*Math.sqrt(3);
   var uW = Math.ceil(W/xUnit);

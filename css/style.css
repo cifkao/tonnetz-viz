@@ -48,7 +48,8 @@
 
 .labels > div > div {
   margin-left: -50%;
-  margin-top: -1ex;
+  line-height: 1em;
+  margin-top: -0.4em;
 }
 
 #note-labels {
