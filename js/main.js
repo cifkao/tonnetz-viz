@@ -43,6 +43,8 @@ $(function(){
   $('#panic').click(function() { allNotesOff(); sustainOff(); });
   $('#enable-sustain').click(toggleSustainEnabled);
   $('#show-note-names').click(function() { $(noteLabels).toggle(); });
+
+  $('[data-toggle="tooltip"]').tooltip();
 });
 
 function collapseNav() {
