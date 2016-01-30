@@ -12,7 +12,6 @@ var STROKE = ['#bababa', '#bababa', '#0e1f5b', '#0e1f5b'];
 var FILL_MAJ     = '#faf7db',
     FILL_MIN     = '#eeebc9';
 
-var canvas, ctx;
 var W,  // width
     H,  // height
     u;  // unit distance (distance between neighbors)

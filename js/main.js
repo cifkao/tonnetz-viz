@@ -1,13 +1,11 @@
-var audioCtx, midi, port = null;
+var midi, port = null;
+var canvas, ctx;
 
 $(function(){
   canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
   noteLabels = document.getElementById("note-labels");
 
-  window.AudioContext = window.AudioContext || window.webkitAudioContext;
-
-  context = new AudioContext();
   if (navigator.requestMIDIAccess) {
     navigator.requestMIDIAccess().then(onMIDIInit, onMIDIReject);
   } else {
