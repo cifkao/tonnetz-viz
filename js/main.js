@@ -36,25 +36,28 @@ $(function(){
     }
   });
 
-  $('#tabs').on('hidden.bs.collapse', function() { noTab(); });
-  $('#tonnetz').click(function() {
-    $('#tabs').collapse('hide');
-    collapseNav();
-  });
+  $('#tabs').on('hidden.bs.collapse', noTab);
+  $('#tonnetz').click(collapseNavAndTabs);
+  $('.navbar-brand').click(collapseNavAndTabs);
 
   $('#panic').click(function() { allNotesOff(); sustainOff(); });
   $('#enable-sustain').click(toggleSustainEnabled);
   $('#show-note-names').click(function() { $(noteLabels).toggle(); });
 });
 
-function noTab() {
-  $('#navbar a[data-toggle="tab"][href="#"]').tab('show');
-}
-
 function collapseNav() {
   if($('.navbar-toggle').is(':visible') && $('.navbar-collapse').hasClass('in')) {
     $('.navbar-toggle').click();
   }
+}
+
+function collapseNavAndTabs() {
+  $('#tabs').collapse('hide');
+  collapseNav();
+}
+
+function noTab() {
+  $('#navbar a[data-toggle="tab"][href="#"]').tab('show');
 }
 
 function showAlert(text, type) {
