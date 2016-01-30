@@ -27,6 +27,7 @@ $(function(){
   $('#navbar a[data-toggle="tab"]').on('shown.bs.tab', function() {
     if ($(this).attr('href') != "#")
       $('#tabs').collapse('show');
+      collapseNav();
   });
 
   $('#navbar a[data-toggle="tab"]').click(function() {
@@ -36,7 +37,10 @@ $(function(){
   });
 
   $('#tabs').on('hidden.bs.collapse', function() { noTab(); });
-  $('#tonnetz').click(function() { $('#tabs').collapse('hide'); });
+  $('#tonnetz').click(function() {
+    $('#tabs').collapse('hide');
+    collapseNav();
+  });
 
   $('#panic').click(function() { allNotesOff(); sustainOff(); });
   $('#enable-sustain').click(toggleSustainEnabled);
@@ -45,6 +49,12 @@ $(function(){
 
 function noTab() {
   $('#navbar a[data-toggle="tab"][href="#"]').tab('show');
+}
+
+function collapseNav() {
+  if($('.navbar-toggle').is(':visible') && $('.navbar-collapse').hasClass('in')) {
+    $('.navbar-toggle').click();
+  }
 }
 
 function showAlert(text, type) {
