@@ -31,9 +31,9 @@
         <div class="collapse navbar-collapse" id="navbar-collapse">
           <ul class="nav navbar-nav" role="tablist">
             <li>
-              <a href="#midi" data-toggle="tab" role="tab" aria-controls="midi">
+              <a href="#controls" data-toggle="tab" role="tab" aria-controls="controls">
                 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
-                MIDI<span class="caret"></span>
+                Controls<span class="caret"></span>
               </a>
             </li>
             <li>
@@ -50,50 +50,81 @@
       </nav>
 
       <div class="tab-content collapse col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2" id="tabs">
-        <div role="tabpanel" class="tab-pane" id="midi">
-          <div class="form-group">
-            <div class="row">
-              <div class="col-xs-4 col-sm-5 col-sm-offset-1">
-                <label for="midi-port" class="control-label">MIDI port</label>
-                <select class="form-control" name="midi-port" id="midi-port"></select>
-              </div>
+        <div role="tabpanel" class="tab-pane" id="controls">
+          <div class="panel panel-default">
+            <div class="panel-heading">MIDI</div>
+            <div class="panel-body">
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-xs-4 col-sm-5 col-sm-offset-1">
+                    <label for="midi-port" class="control-label">MIDI port</label>
+                    <select class="form-control" name="midi-port" id="midi-port"></select>
+                  </div>
 
-              <div class="col-xs-4 col-sm-3">
-                <label for="midi-channel" class="control-label">MIDI channel</label>
-                <select class="form-control" name="midi-channel" id="midi-channel">
-                  <option value="-1">All</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                  <option value="13">13</option>
-                  <option value="14">14</option>
-                  <option value="15">15</option>
-                  <option value="16">16</option>
-                </select>
+                  <div class="col-xs-4 col-sm-3">
+                    <label for="midi-channel" class="control-label">MIDI channel</label>
+                    <select class="form-control" name="midi-channel" id="midi-channel">
+                      <option value="-1">All</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                      <option value="11">11</option>
+                      <option value="12">12</option>
+                      <option value="13">13</option>
+                      <option value="14">14</option>
+                      <option value="15">15</option>
+                      <option value="16">16</option>
+                    </select>
+                  </div>
+
+                  <div class="col-xs-4 col-sm-2">
+                    <label class="control-label">&nbsp;</label>
+                    <button type="button" id="panic" class="btn btn-default btn-block">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    Panic</button>
+                  </div>
+                </div>
               </div>
-              
-              <div class="col-xs-4 col-sm-2">
-                <label class="control-label">&nbsp;</label>
-                <button type="button" id="panic" class="btn btn-default btn-block">
-                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                Panic</button>
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+                    <div class="checkbox">
+                      <label><input name="enable-sustain" id="enable-sustain" type="checkbox" checked> Enable sustain pedal</label>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="form-group">
-            <div class="row">
-              <div class="col-xs-12 col-sm-10 col-sm-offset-1">
-                <div class="checkbox">
-                  <label><input name="enable-sustain" id="enable-sustain" type="checkbox" checked> Enable sustain pedal</label>
+          <div class="panel panel-default">
+            <div class="panel-heading">Computer keyboard</div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+                  <div class="keyboard">
+                    <span class="white key"><span>A</span></span>
+                    <span class="black key"><span>W</span></span>
+                    <span class="white key"><span>S</span></span>
+                    <span class="black key"><span>E</span></span>
+                    <span class="white key"><span>D</span></span>
+                    <span class="white key"><span>F</span></span>
+                    <span class="black key"><span>T</span></span>
+                    <span class="white key"><span>G</span></span>
+                    <span class="black key"><span><sup>Y</sup>/<sub>Z</sub></span></span>
+                    <span class="white key"><span>H</span></span>
+                    <span class="black key"><span>U</span></span>
+                    <span class="white key"><span>J</span></span>
+                    <span class="white key"><span>K</span></span>
+                    <span class="black key"><span>O</span></span>
+                    <span class="white key"><span>L</span></span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -131,6 +162,8 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/midi.js"></script>
+    <script type="text/javascript" src="js/keyboard.js"></script>
     <script type="text/javascript" src="js/tonnetz.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
   </body>

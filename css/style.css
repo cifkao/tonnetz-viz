@@ -12,7 +12,7 @@
 }
 
 #tabs {
-  background: #f5f5f5;
+  background: #fafafa;
   border: 1px solid #b3b3b3;
   border-top: none;
 }
@@ -21,6 +21,54 @@
   padding: 10px;
   padding-top: 20px;
 }
+
+#tabs .tab-pane .panel-default>.panel-heading {
+  background: #eaeaea;
+}
+
+
+.keyboard .key {
+  float: left;
+  text-align: center;
+  position: relative;
+}
+
+.keyboard .key span {
+  height: 100%;
+  line-height: 45px;
+}
+
+.keyboard .white.key {
+  background: #fff;
+  color: #000;
+  outline: 1px solid #aaa;
+  width: 11.1%;
+  height: 100px;
+}
+
+.keyboard .white.key span {
+  position: relative;
+  top: 55px;
+}
+
+.keyboard .black.key {
+  height: 55px;
+  width: 8%;
+  margin-right: -8%;
+}
+
+.keyboard .black.key span {
+  background: #111;
+  color: #fff;
+  outline: 1px solid #000;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  left: -50%;
+  line-height: 50px;
+  z-index: 2;
+}
+
 
 #messages-container {
   position: absolute;
