@@ -20,18 +20,25 @@ var KEYBOARD_NOTES = {
 var KEYBOARD_BASE_PITCH = 60;  // middle C
 
 
-function onKeyDown(event) {
-  var note = KEYBOARD_BASE_PITCH + KEYBOARD_NOTES[event.keyCode];
+function getPitchFromKeyboardEvent(event) {
+  var note = KEYBOARD_BASE_PITCH + KEYBOARD_NOTES[event.which];
 
-  if (isFinite(note)) {
+  if (isFinite(note) && !event.ctrlKey && !event.altKey && !event.metaKey)
+    return note;
+  else
+    return null;
+}
+
+function onKeyDown(event) {
+  var note = getPitchFromKeyboardEvent(event);
+  if (note != null) {
     noteOn(note);
   }
 }
 
 function onKeyUp(event) {
-  var note = KEYBOARD_BASE_PITCH + KEYBOARD_NOTES[event.keyCode];
-
-  if (isFinite(note)) {
+  var note = getPitchFromKeyboardEvent(event);
+  if (note != null) {
     noteOff(note);
   }
 }
