@@ -21,8 +21,12 @@ $(function(){
 
 
   init();
-  draw();
-  window.onresize = function() { init(); draw(); };
+  window.onresize = init;
+
+  $('#tonnetz').mousewheel(function(event) {
+    setDensity(density - event.deltaY);
+    return false;
+  });
 
   $('#navbar a[data-toggle="tab"]').on('shown.bs.tab', function() {
     if ($(this).attr('href') != "#")
@@ -59,7 +63,7 @@ function collapseNavAndTabs() {
 }
 
 function noTab() {
-  $('#navbar a[data-toggle="tab"][href="#"]').tab('show');
+  $('#dummy-tab').tab('show');
 }
 
 function showAlert(text, type) {

@@ -43,7 +43,7 @@
               </a>
             </li>
             <li class="hidden">
-              <a href="#" data-toggle="tab" role="tab">Appearance<span class="caret"></a>
+              <a href="#" data-toggle="tab" role="tab" id="dummy-tab"></a>
             </li>
           </ul>
         </div><!-- /.navbar-collapse -->
@@ -131,14 +131,16 @@
           </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="appearance">
-          <div class="form-group">
-            <div class="row">
-              <div class="col-xs-12 col-sm-10 col-sm-offset-1">
-                <div class="checkbox">
-                  <label><input name="show-note-names" id="show-note-names" type="checkbox" checked> Show note names</label>
-                </div>
-                <div class="checkbox">
-                  <label><input name="show-triad-names" id="show-triad-names" type="checkbox"> Show triad names</label>
+          <div class="panel panel-default">
+            <div class="panel-heading">Appearance</div>
+            <div class="panel-body">
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+                    <div class="checkbox">
+                      <label><input name="show-note-names" id="show-note-names" type="checkbox" checked> Show note names</label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -160,8 +162,9 @@
       </canvas>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/midi.js"></script>
     <script type="text/javascript" src="js/keyboard.js"></script>
     <script type="text/javascript" src="js/tonnetz.js"></script>

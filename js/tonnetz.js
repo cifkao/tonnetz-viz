@@ -1,5 +1,4 @@
 var GHOST_DURATION = 500;
-var DENSITY = 16;
 
 var TONE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
 var STATE_OFF = 0,
@@ -17,6 +16,7 @@ var canvas, ctx;
 var W,  // width
     H,  // height
     u;  // unit distance (distance between neighbors)
+var density = 16;
 var noteLabels;
 var toneGrid = [];
 var tones = [];
@@ -94,6 +94,13 @@ function sustainOff() {
 
 function toggleSustainEnabled() {
   sustainEnabled = !sustainEnabled;
+}
+
+function setDensity(d) {
+  if (isFinite(d) && d >= 5 && d <= 50) {
+    density = d;
+    init();
+  }
 }
 
 
@@ -290,7 +297,7 @@ function addNode(tone, x, y) {
 function init() {
   W = canvas.width  = window.innerWidth;
   H = canvas.height = window.innerHeight;
-  u = (W+H)/DENSITY;
+  u = (W+H)/density;
 
   for (var i=0; i<12; i++) {
     toneGrid[i] = [];
@@ -309,4 +316,6 @@ function init() {
       addNode(((i-7*j)%12 + 12 + 4)%12, W/2+(i+1/2)*xUnit, H/2+(j-1/2)*u);
     }
   }
+
+  draw();
 }
