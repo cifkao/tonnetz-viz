@@ -1,10 +1,12 @@
 var midi, port = null;
-var canvas, ctx;
+var canvas, ctx, noteLabels, triadLabels;
 
 $(function(){
   canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
   noteLabels = document.getElementById("note-labels");
+  triadLabels = document.getElementById("triad-labels");
+  $(triadLabels).hide();
 
   if (navigator.requestMIDIAccess) {
     navigator.requestMIDIAccess().then(onMIDIInit, onMIDIReject);
@@ -45,6 +47,7 @@ $(function(){
   $('#panic').click(function() { allNotesOff(); sustainOff(); });
   $('#enable-sustain').click(toggleSustainEnabled);
   $('#show-note-names').click(function() { $(noteLabels).toggle(); });
+  $('#show-triad-names').click(function() { $(triadLabels).toggle(); });
 
   $('[data-toggle="tooltip"]').tooltip();
 });

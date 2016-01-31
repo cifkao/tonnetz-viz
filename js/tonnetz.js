@@ -16,7 +16,6 @@ var W,  // width
     H,  // height
     u;  // unit distance (distance between neighbors)
 var density = 16;
-var noteLabels;
 var toneGrid = [];
 var tones = [];
 var pitches = {};
@@ -207,6 +206,21 @@ function draw() {
           ctx.fill();
         }
       }
+
+      var $minorTriadLabel = $(toneGrid[tone][i].minorTriadLabel);
+      var $majorTriadLabel = $(toneGrid[tone][i].majorTriadLabel);
+
+      if (minorOn) {
+        $minorTriadLabel.addClass('state-ON');
+      } else {
+        $minorTriadLabel.removeClass('state-ON');
+      }
+
+      if (majorOn) {
+        $majorTriadLabel.addClass('state-ON');
+      } else {
+        $majorTriadLabel.removeClass('state-ON');
+      }
     }
   }
 
@@ -277,20 +291,39 @@ function getNeighborXYDiff(t1, t2){
   }
 }
 
+function createLabel(text, x, y) {
+  var label = document.createElement('div');
+  var inner = document.createElement('div');
+  inner.appendChild(document.createTextNode(text));
+  label.appendChild(inner);
+  label.style.left = x + 'px';
+  label.style.top = y + 'px';
+  return label;
+}
+
 function addNode(tone, x, y) {
   if (x < -u || y < -u || x > W+u || y > H+u) {
     return;
   }
 
-  var label = document.createElement('div');
-  var inner = document.createElement('div');
-  inner.appendChild(document.createTextNode(tones[tone].name));
-  label.appendChild(inner);
-  label.style.left = x + 'px';
-  label.style.top = y + 'px';
-  noteLabels.appendChild(label);
+  var xUnit = u * SQRT_3;
+  var name = tones[tone].name;
+  var node = {'x': x, 'y': y};
 
-  toneGrid[tone].push({'x': x, 'y': y, 'label': label});
+  // Create the note label.
+  node.label = createLabel(name, x, y);
+  noteLabels.appendChild(node.label);
+
+  // Create labels for the two triads above this node.
+  node.majorTriadLabel = createLabel(name.toUpperCase(), x + xUnit/6, y - u/2);
+  node.majorTriadLabel.className = 'major';
+  node.minorTriadLabel = createLabel(name.toLowerCase(), x - xUnit/6, y - u/2);
+  node.minorTriadLabel.className = 'minor';
+  triadLabels.appendChild(node.majorTriadLabel);
+  triadLabels.appendChild(node.minorTriadLabel);
+
+  // Add the node to the grid.
+  toneGrid[tone].push(node);
 }
 
 function init() {
@@ -303,16 +336,24 @@ function init() {
   }
 
   $(noteLabels).empty();
+  $(triadLabels).empty();
 
   $(noteLabels).css('font-size', u * 0.17 + 'px');
+  $(triadLabels).css('font-size', u * 0.17 + 'px');
 
-  var xUnit = u*Math.sqrt(3);
+  var xUnit = u * SQRT_3;
   var uW = Math.ceil(W/xUnit);
   var uH = Math.ceil(H/u);
+
   for (var j=-Math.floor(uH/2+1); j<=Math.floor(uH/2+1); j++) {
     for (var i=-Math.floor(uW/2+1); i<=Math.floor(uW/2+1); i++) {
-      addNode(((i-7*j)%12 + 12)%12, W/2+i*xUnit, H/2+j*u);
-      addNode(((i-7*j)%12 + 12 + 4)%12, W/2+(i+1/2)*xUnit, H/2+(j-1/2)*u);
+      addNode(((i-7*j)%12 + 12)%12,
+              W/2 + i*xUnit,
+              H/2 + j*u);
+
+      addNode(((i-7*j)%12 + 12 + 4)%12,
+              W/2 + (i + 1/2)*xUnit,
+              H/2 + (j - 1/2)*u);
     }
   }
 

@@ -101,7 +101,7 @@
 }
 
 #note-labels {
-  color: #bababa;
+  color: #aaaaaa;
 }
 
 #note-labels .state-ON , #note-labels .state-GHOST{
@@ -110,6 +110,18 @@
 
 #note-labels .state-SUSTAIN {
   color: #d1dbf0;
+}
+
+#triad-labels {
+  color: #c0c0c0;
+}
+
+#triad-labels .major.state-ON {
+  color: #bea866;
+}
+
+#triad-labels .minor.state-ON {
+  color: #aa9b68;
 }
 
 
