@@ -27,6 +27,16 @@ $(function(){
     setDensity(density - event.deltaY);
     return false;
   });
+  $(window).keypress(function(event) {
+    if (somethingHasFocus()) return;
+
+    var c = String.fromCharCode(event.which);
+    if (c == '+') {
+      setDensity(density - 2);
+    } else if (c == '-') {
+      setDensity(density + 2);
+    }
+  });
 
   $('#navbar a[data-toggle="tab"]').on('shown.bs.tab', function() {
     if ($(this).attr('href') != "#")
@@ -72,6 +82,10 @@ function collapseNavAndTabs() {
 
 function noTab() {
   $('#dummy-tab').tab('show');
+}
+
+function somethingHasFocus() {
+  return $(':focus').is('input, select, button');
 }
 
 function showAlert(text, type) {

@@ -101,7 +101,7 @@ function setDensity(d) {
 }
 
 function setGhostDuration(d) {
-  if (isFinite(d)) {
+  if (isFinite(d) && d !== null && d !== '') {
     d = Number(d);
     if (d >= 0) {
       if (d != ghostDuration) {

@@ -30,6 +30,8 @@ function getPitchFromKeyboardEvent(event) {
 }
 
 function onKeyDown(event) {
+  if (somethingHasFocus()) return;
+
   var note = getPitchFromKeyboardEvent(event);
   if (note != null) {
     noteOn(note);
@@ -37,6 +39,8 @@ function onKeyDown(event) {
 }
 
 function onKeyUp(event) {
+  if (somethingHasFocus()) return;
+
   var note = getPitchFromKeyboardEvent(event);
   if (note != null) {
     noteOff(note);
