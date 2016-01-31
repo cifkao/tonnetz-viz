@@ -48,6 +48,13 @@ $(function(){
   $('#enable-sustain').click(toggleSustainEnabled);
   $('#show-note-names').click(function() { $(noteLabels).toggle(); });
   $('#show-triad-names').click(function() { $(triadLabels).toggle(); });
+  $('#ghost-duration').on('input change propertychange paste', function() {
+    if(!setGhostDuration($(this).val())) {
+      $(this).closest('.form-group').addClass('has-error');
+    } else {
+      $(this).closest('.form-group').removeClass('has-error');
+    }
+  });
 
   $('[data-toggle="tooltip"]').tooltip();
 });

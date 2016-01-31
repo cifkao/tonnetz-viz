@@ -1,5 +1,3 @@
-var GHOST_DURATION = 500;
-
 var TONE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
 var STATE_OFF = 0,
     STATE_GHOST = 1,
@@ -16,6 +14,7 @@ var W,  // width
     H,  // height
     u;  // unit distance (distance between neighbors)
 var density = 16;
+var ghostDuration = 500;
 var toneGrid = [];
 var tones = [];
 var pitches = {};
@@ -101,10 +100,25 @@ function setDensity(d) {
   }
 }
 
+function setGhostDuration(d) {
+  if (isFinite(d)) {
+    d = Number(d);
+    if (d >= 0) {
+      if (d != ghostDuration) {
+        ghostDuration = d;
+        draw();
+      }
+      return true;
+    }
+  }
+
+  return false;
+}
+
 
 function releaseTone(tone) {
   tone.release = new Date();
-  if (GHOST_DURATION > 0) {
+  if (ghostDuration > 0) {
     tone.state = STATE_GHOST;
     ghosts();
   } else {
@@ -128,7 +142,7 @@ function ghosts() {
 
       for (var i=0; i<12; i++) {
         if (tones[i].state == STATE_GHOST) {
-          if (now - tones[i].release >= GHOST_DURATION) {
+          if (now - tones[i].release >= ghostDuration) {
             tones[i].state = STATE_OFF;
             numDead++;
           } else {
@@ -144,7 +158,7 @@ function ghosts() {
 
       if (numDead>0)
         draw();
-    }, 50);
+    }, Math.min(ghostDuration, 50));
   }
 }
 
