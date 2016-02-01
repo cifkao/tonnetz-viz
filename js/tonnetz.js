@@ -89,6 +89,12 @@ function sustainOff() {
   draw();
 }
 
+function panic() {
+  allNotesOff();
+  sustainOff();
+}
+
+
 function toggleSustainEnabled() {
   sustainEnabled = !sustainEnabled;
 }

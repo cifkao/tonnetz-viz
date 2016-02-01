@@ -30,6 +30,7 @@ function onMIDIPortChange() {
   if (id != currentId) {
     if (port != null) {
       port.removeEventListener('midimessage', MIDIMessageEventListener); 
+      panic();
     }
 
     port = midi.inputs.get(id);

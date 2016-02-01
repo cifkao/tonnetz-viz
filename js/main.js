@@ -54,7 +54,7 @@ $(function(){
   $('#tonnetz').click(collapseNavAndTabs);
   $('.navbar-brand').click(collapseNavAndTabs);
 
-  $('#panic').click(function() { allNotesOff(); sustainOff(); });
+  $('#panic').click(panic);
   $('#enable-sustain').click(toggleSustainEnabled);
   $('#show-note-names').click(function() { $(noteLabels).toggle(); });
   $('#show-triad-names').click(function() { $(triadLabels).toggle(); });
