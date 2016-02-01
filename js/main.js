@@ -1,4 +1,3 @@
-var midi, port = null;
 var canvas, ctx, noteLabels, triadLabels;
 
 $(function(){

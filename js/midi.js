@@ -1,3 +1,5 @@
+var midi, port = null, channel = -1;
+
 function onMIDIInit(midiAccess) {
   // Get last used port ID from local storage.
   var preferredPort = null;
@@ -16,6 +18,7 @@ function onMIDIInit(midiAccess) {
 
   midi.addEventListener('statechange', MIDIConnectionEventListener);
   $('#midi-port').change(onMIDIPortChange);
+  $('#midi-channel').change(onMIDIChannelChange);
   onMIDIPortChange();
 }
 
@@ -44,6 +47,14 @@ function onMIDIPortChange() {
       }
     }
   }
+}
+
+function onMIDIChannelChange() {
+  var currentChannel = channel;
+  channel = Number($('#midi-channel').val());
+
+  if (channel != currentChannel)
+    panic();
 }
 
 function MIDIConnectionEventListener(event) {
@@ -85,7 +96,10 @@ var MIDI_NOTE_ON           = 0x90,
 function MIDIMessageEventListener(event) {
   var msg = event.data;
   var msgType = msg[0] & 0xF0;
-  var channel = msg[0] & 0x0F;
+  var msgChannel = (msg[0] & 0x0F) + 1;
+
+  if (channel > 0 && msgChannel != channel)
+    return;
 
   switch (msgType) {
     case MIDI_NOTE_ON:
