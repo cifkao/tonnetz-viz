@@ -1,3 +1,14 @@
+a:link.external:after {
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  font-size: 60%;
+  margin-left: 0.25em;
+  margin-right: 0.1em;
+  content: "\e164";
+}
+
+
 #top-container {
   min-width: 100%;
 }

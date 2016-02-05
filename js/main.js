@@ -66,6 +66,14 @@ $(function(){
   });
 
   $('[data-toggle="tooltip"]').tooltip();
+
+  // Open links with data-popup="true" in a new window.
+  $(function() {
+    $('body').on('click', 'a[data-popup]', function(event) {
+      window.open($(this)[0].href);
+      event.preventDefault();
+    });
+  });
 });
 
 function collapseNav() {
