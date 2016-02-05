@@ -33,7 +33,7 @@ function onMIDIPortChange() {
   if (id != currentId) {
     if (port != null) {
       port.removeEventListener('midimessage', MIDIMessageEventListener); 
-      panic();
+      tonnetz.panic();
     }
 
     port = midi.inputs.get(id);
@@ -54,7 +54,7 @@ function onMIDIChannelChange() {
   channel = Number($('#midi-channel').val());
 
   if (channel != currentChannel)
-    panic();
+    tonnetz.panic();
 }
 
 function MIDIConnectionEventListener(event) {
@@ -104,27 +104,27 @@ function MIDIMessageEventListener(event) {
   switch (msgType) {
     case MIDI_NOTE_ON:
       if (msg[2] != 0) {
-        noteOn(msg[1]);
+        tonnetz.noteOn(msg[1]);
         break;
       }
       // velocity == 0:  note off
     case MIDI_NOTE_OFF:
-      noteOff(msg[1]);
+      tonnetz.noteOff(msg[1]);
       break;
     case MIDI_CONTROL_CHANGE:
       switch (msg[1]) {
         case MIDI_CC_SUSTAIN:
           if (msg[2] >= 64) {
-            sustainOn();
+            tonnetz.sustainOn();
           } else {
-            sustainOff();
+            tonnetz.sustainOff();
           }
           break;
         case MIDI_CC_ALL_CONTROLLERS_OFF:
-          sustainOff();
+          tonnetz.sustainOff();
           break;
         case MIDI_CC_ALL_NOTES_OFF:
-          allNotesOff();
+          tonnetz.allNotesOff();
           break;
       }
       break;
