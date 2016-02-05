@@ -342,7 +342,6 @@ function addNode(tone, x, y) {
     return;
   }
 
-  var xUnit = u * SQRT_3;
   var name = tones[tone].name;
   var node = {'x': x, 'y': y};
 
@@ -351,9 +350,16 @@ function addNode(tone, x, y) {
   noteLabels.appendChild(node.label);
 
   // Create labels for the two triads above this node.
-  node.majorTriadLabel = createLabel(name.toUpperCase(), x + xUnit/6, y - u/2);
+  if (layout == LAYOUT_RIEMANN) {
+    var yUnit = u * SQRT_3;
+    node.majorTriadLabel = createLabel(name.toUpperCase(), x + u/2, y + yUnit/6);
+    node.minorTriadLabel = createLabel(name.toLowerCase(), x + u/2, y - yUnit/6);
+  } else if (layout == LAYOUT_SONOME) {
+    var xUnit = u * SQRT_3;
+    node.majorTriadLabel = createLabel(name.toUpperCase(), x + xUnit/6, y - u/2);
+    node.minorTriadLabel = createLabel(name.toLowerCase(), x - xUnit/6, y - u/2);
+  }
   node.majorTriadLabel.className = 'major';
-  node.minorTriadLabel = createLabel(name.toLowerCase(), x - xUnit/6, y - u/2);
   node.minorTriadLabel.className = 'minor';
   triadLabels.appendChild(node.majorTriadLabel);
   triadLabels.appendChild(node.minorTriadLabel);
@@ -378,7 +384,7 @@ function init() {
   $(triadLabels).css('font-size', u * 0.17 + 'px');
 
   if (layout == LAYOUT_RIEMANN) {
-    var yUnit = u*SQRT_3;
+    var yUnit = u * SQRT_3;
     var uW = Math.ceil(W/u);
     var uH = Math.ceil(H/yUnit);
     for(var j=-Math.floor(uW/2+1); j<=Math.floor(uW/2+1); j++){
