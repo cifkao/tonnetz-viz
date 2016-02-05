@@ -4,6 +4,8 @@ var STATE_OFF = 0,
     STATE_SUST = 2,
     STATE_ON = 3;
 var STATE_NAMES = ['OFF', 'GHOST', 'SUSTAIN', 'ON'];
+var LAYOUT_RIEMANN = 'riemann',
+    LAYOUT_SONOME = 'sonome';
 
 var FILL = ['#ffffff', '#aeaeae', '#46629e', '#2c4885'];
 var STROKE = ['#bababa', '#bababa', '#0e1f5b', '#0e1f5b'];
@@ -15,6 +17,7 @@ var W,  // width
     u;  // unit distance (distance between neighbors)
 var density = 16;
 var ghostDuration = 500;
+var layout = LAYOUT_RIEMANN;
 var toneGrid = [];
 var tones = [];
 var pitches = {};
@@ -119,6 +122,11 @@ function setGhostDuration(d) {
   }
 
   return false;
+}
+
+function setLayout(l) {
+  layout = l;
+  init();
 }
 
 
@@ -300,15 +308,23 @@ function drawEdge(ctx, endpoint, state1, state2) {
 }
 
 function getNeighborXYDiff(t1, t2){
-  var diff = (t2-t1+12)%12; 
-  switch(diff){
-    case 3: return {x: -.5*SQRT_3*u, y: -.5*u};
-    case 7: return {x: 0, y: -1*u};
-    case 4: return {x: .5*SQRT_3*u, y: -.5*u};
-    case 9: return {x: .5*SQRT_3*u, y: .5*u};
-    case 5: return {x: 0, y: 1*u};
-    case 8: return {x: -.5*SQRT_3*u, y: .5*u};
+  var diff = (t2-t1+12)%12;
+
+  var result;
+  switch (diff){
+    case 3: result = {x: -0.5*SQRT_3*u, y: -0.5*u}; break;
+    case 7: result = {x: 0, y: -1*u}; break;
+    case 4: result = {x: 0.5*SQRT_3*u, y: -0.5*u}; break;
+    case 9: result = {x: 0.5*SQRT_3*u, y: 0.5*u}; break;
+    case 5: result = {x: 0, y: 1*u}; break;
+    case 8: result = {x: -0.5*SQRT_3*u, y: 0.5*u}; break;
   }
+
+  if (layout == LAYOUT_RIEMANN) {
+    result = {x: -result.y, y: result.x};
+  }
+
+  return result;
 }
 
 function createLabel(text, x, y) {
@@ -361,19 +377,36 @@ function init() {
   $(noteLabels).css('font-size', u * 0.17 + 'px');
   $(triadLabels).css('font-size', u * 0.17 + 'px');
 
-  var xUnit = u * SQRT_3;
-  var uW = Math.ceil(W/xUnit);
-  var uH = Math.ceil(H/u);
+  if (layout == LAYOUT_RIEMANN) {
+    var yUnit = u*SQRT_3;
+    var uW = Math.ceil(W/u);
+    var uH = Math.ceil(H/yUnit);
+    for(var j=-Math.floor(uW/2+1); j<=Math.floor(uW/2+1); j++){
+      for(var i=-Math.floor(uH/2+1); i<=Math.floor(uH/2+1); i++){
+        addNode(((i-7*j)%12 + 12)%12,
+                W/2 - j*u,
+                H/2 + i*yUnit);
 
-  for (var j=-Math.floor(uH/2+1); j<=Math.floor(uH/2+1); j++) {
-    for (var i=-Math.floor(uW/2+1); i<=Math.floor(uW/2+1); i++) {
-      addNode(((i-7*j)%12 + 12)%12,
-              W/2 + i*xUnit,
-              H/2 + j*u);
+        addNode(((i-7*j)%12 + 12 + 4)%12,
+                W/2 - (j - 0.5)*u,
+                H/2 + (i + 0.5)*yUnit);
+      }
+    }
+  } else if (layout == LAYOUT_SONOME) {
+    var xUnit = u * SQRT_3;
+    var uW = Math.ceil(W/xUnit);
+    var uH = Math.ceil(H/u);
 
-      addNode(((i-7*j)%12 + 12 + 4)%12,
-              W/2 + (i + 1/2)*xUnit,
-              H/2 + (j - 1/2)*u);
+    for (var j=-Math.floor(uH/2+1); j<=Math.floor(uH/2+1); j++) {
+      for (var i=-Math.floor(uW/2+1); i<=Math.floor(uW/2+1); i++) {
+        addNode(((i-7*j)%12 + 12)%12,
+                W/2 + i*xUnit,
+                H/2 + j*u);
+
+        addNode(((i-7*j)%12 + 12 + 4)%12,
+                W/2 + (i + 0.5)*xUnit,
+                H/2 + (j - 0.5)*u);
+      }
     }
   }
 

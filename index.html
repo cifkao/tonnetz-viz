@@ -142,13 +142,20 @@
               <div class="form-horizontal">
                 <div class="form-group">
                   <label class="control-label col-xs-5 col-sm-4 col-md-3">Labels</label>
-                  <div class="form-group col-xs-6 col-sm-4">
+                  <div class="form-group col-xs-6 col-sm-7 col-md-8">
                     <div class="checkbox">
                       <label><input name="show-note-names" id="show-note-names" type="checkbox" checked> Show tone names</label>
                     </div>
                     <div class="checkbox">
                       <label><input name="show-triad-names" id="show-triad-names" type="checkbox"> Show triad names</label>
                     </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="layout" class="control-label col-xs-5 col-sm-4 col-md-3">Layout</label>
+                  <div class="form-group col-xs-6 col-sm-7 col-md-8">
+                    <label class="radio-inline"><input type="radio" name="layout" value="riemann" checked>Riemannian</label>
+                    <label class="radio-inline"><input type="radio" name="layout" value="sonome">Sonome</label>
                   </div>
                 </div>
                 <div class="form-group">
@@ -171,12 +178,11 @@
               to 6 adjacent nodes. The &lsquo;neighbours&rsquo; of each tone are related to it either by a third (major or minor), or by a perfect fifth, depending
               on their relative position in the diagram.</p>
 
-              <p>Because of the way it is organized, the Tonnetz has many interesting properties.
-              For example, each unit triangle defines a major or minor triad.
-              Moreover, any combination of tones (e.g. a chord or a melodic idea)
-              forms a &lsquo;shape&rsquo; that is unchanged by transposition&nbsp;&ndash;
-              for instance, every major triad is a right-pointing triangle,
-              and every minor triad is a left-pointing triangle.</p>
+              <p>Because of the way it is organized, the Tonnetz has the interesting property that
+              any combination of tones (e.g. a chord or a melodic idea)
+              forms a &lsquo;shape&rsquo; that is unchanged by transposition.
+              For instance, on the default layout, every major triad is a downward-pointing triangle,
+              and every minor triad is an upward-pointing triangle.</p>
             </div>
           </div>
         </div>

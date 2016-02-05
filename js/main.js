@@ -64,6 +64,9 @@ $(function(){
       $(this).closest('.form-group').removeClass('has-error');
     }
   });
+  $('input[type=radio][name=layout]').change(function () {
+    setLayout($(this).val());
+  });
 
   $('[data-toggle="tooltip"]').tooltip();
 
