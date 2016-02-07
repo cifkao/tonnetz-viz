@@ -172,18 +172,32 @@
         </div>
         <div role="tabpanel" class="tab-pane" id="about">
           <div class="panel panel-default">
-            <div class="panel-heading">Tonnetz</div>
+            <div class="panel-heading">About TonnetzViz</div>
             <div class="panel-body">
+              <p>TonnetzViz is an app that visualizes music in real time using the Tonnetz.</p>
+
               <p>The <a href="https://en.wikipedia.org/wiki/Tonnetz" class="external" data-popup="true">Tonnetz</a> is a diagram representing tonal space.
               It can be used to visualize harmonic relationships in music. Each node in the diagram corresponds to one of the 12 tones and is connected
               to 6 adjacent nodes. The &lsquo;neighbours&rsquo; of each tone are related to it either by a third (major or minor), or by a perfect fifth, depending
               on their relative position in the diagram.</p>
 
-              <p>Because of the way it is organized, the Tonnetz has the interesting property that
+              <p>One of the interesting properties of the Tonnetz is that
               any combination of tones (e.g. a chord or a melodic idea)
               forms a &lsquo;shape&rsquo; that is unchanged by transposition.
               For instance, in the default layout, every major triad is a downward-pointing triangle,
               and every minor triad is an upward-pointing triangle.</p>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading">How to use</div>
+            <div class="panel-body">
+              <p>If your browser supports the Web MIDI API, you can use TonnetzViz with any MIDI-enabled instrument.
+              Just connect it to your computer, go to <a href="#controls" class="tab-link">Controls</a>, select
+              the appropriate MIDI port and play. You can also connect TonnetzViz to a software sequencer using a
+              virtual loopback MIDI port.</p>
+
+              <p>No MIDI support in your browser? You can use your computer's keyboard to control the app
+              (see <a href="#controls" class="tab-link">Controls</a>).</p>
             </div>
           </div>
         </div>

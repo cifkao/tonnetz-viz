@@ -38,6 +38,12 @@ $(function(){
     }
   });
 
+  $('.tab-link').click(function(event) {
+    event.preventDefault();
+    var href = $(this).attr('href');
+    $('#navbar a[data-toggle="tab"][href="' + href + '"]').tab('show');
+  });
+
   $('#tabs').on('hidden.bs.collapse', noTab);
   $('#tonnetz').click(collapseNavAndTabs);
   $('.navbar-brand').click(collapseNavAndTabs);
