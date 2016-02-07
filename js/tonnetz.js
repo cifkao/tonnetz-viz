@@ -160,7 +160,7 @@ var tonnetz = (function() {
    * any ghost tones left.
    */
   var ghosts = function() {
-    if (ghostsInterval == null) {
+    if (ghostsInterval === null) {
       ghostsInterval = setInterval(function() {
         var numAlive = 0, numDead = 0;
         var now = new Date();
@@ -183,12 +183,26 @@ var tonnetz = (function() {
 
         if (numDead>0)
           module.draw();
-      }, Math.min(module.ghostDuration, 50));
+      }, Math.min(module.ghostDuration, 30));
     }
   };
 
 
+  var drawTimeout = null;
+
+  /**
+   * Request a redraw, but do not draw immediately.
+   * (Draw at most once every 30 ms.)
+   */
   module.draw = function() {
+    if (drawTimeout === null) {
+      drawTimeout = setTimeout(drawNow, 30);
+    }
+  };
+
+  var drawNow = function() {
+    drawTimeout = null;
+
     var xUnit = u*Math.sqrt(3)/2;
     var uW = Math.ceil(Math.ceil(W/xUnit*2)/2);
     var uH = Math.ceil(H/u);
@@ -427,7 +441,7 @@ var tonnetz = (function() {
       }
     }
 
-    this.draw();
+    drawNow();
   };
 
   return module;
