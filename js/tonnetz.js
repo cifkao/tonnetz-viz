@@ -35,17 +35,21 @@ var tonnetz = (function() {
   var SQRT_3 = Math.sqrt(3);
 
 
-  for (var i=0; i<12; i++) {
-    tones.push({
-      'pitch': i,
-      'name': TONE_NAMES[i],
-      'state': STATE_OFF,
-      'count': 0,
-      'released': null,       // the last time the note was on
-      'cache': {}             // temporary data
-    });
-  }
+  module.init = function() {
+    for (var i=0; i<12; i++) {
+      tones.push({
+        'pitch': i,
+        'name': TONE_NAMES[i],
+        'state': STATE_OFF,
+        'count': 0,
+        'released': null,       // the last time the note was on
+        'cache': {}             // temporary data
+      });
+    }
 
+    this.rebuild();
+    window.onresize = function() { module.rebuild(); };
+  };
 
 
   module.noteOn = function(pitch) {
@@ -424,11 +428,6 @@ var tonnetz = (function() {
     }
 
     this.draw();
-  };
-
-  module.init = function() {
-    this.rebuild();
-    window.onresize = function() { module.rebuild(); };
   };
 
   return module;

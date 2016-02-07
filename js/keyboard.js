@@ -24,6 +24,11 @@ var keyboard = (function() {
 
   var BASE_PITCH = 60;  // middle C
 
+  module.init = function() {
+    $(window).keydown(onKeyDown);
+    $(window).keyup(onKeyUp);
+  };
+
   var getPitchFromKeyboardEvent = function(event) {
     var note = BASE_PITCH + KEYBOARD_NOTES[event.which];
 
@@ -50,11 +55,6 @@ var keyboard = (function() {
     if (note != null) {
       tonnetz.noteOff(note);
     }
-  };
-
-  module.init = function() {
-    $(window).keydown(onKeyDown);
-    $(window).keyup(onKeyUp);
   };
 
   return module;
