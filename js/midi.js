@@ -1,132 +1,151 @@
-var midi, port = null, channel = -1;
+var midi = (function() {
+  "use strict";
 
-function onMIDIInit(midiAccess) {
-  // Get last used port ID from local storage.
-  var preferredPort = null;
-  if(typeof(Storage) !== 'undefined') {
-    preferredPort = localStorage.getItem('midiPort');
-  }
+  var module = {};
 
-  // Add all MIDI ports to the dropdown box.
-  midi = midiAccess;
-  midi.inputs.forEach(function(port) {
-    addMIDIPort(port);
-    if (port.id == preferredPort) {
-      $('#midi-port').val(port.id);
+  var midiAccess, port = null, channel = -1;
+
+
+  module.init = function() {
+    if (navigator.requestMIDIAccess) {
+      navigator.requestMIDIAccess().then(onMIDIInit, onMIDIReject);
+    } else {
+      showError('MIDI support is not present in your browser. You can still use ' +
+                'your computer\'s keyboard.');
     }
-  });
+  };
 
-  midi.addEventListener('statechange', MIDIConnectionEventListener);
-  $('#midi-port').change(onMIDIPortChange);
-  $('#midi-channel').change(onMIDIChannelChange);
-  onMIDIPortChange();
-}
+  var onMIDIInit = function(mAccess) {
+    midiAccess = mAccess;
 
-function onMIDIReject(err) {
-  showError('Failed to obtain access to MIDI.');
-}
+    // Get last used port ID from local storage.
+    var preferredPort = null;
+    if(typeof(Storage) !== 'undefined') {
+      preferredPort = localStorage.getItem('midiPort');
+    }
 
-function onMIDIPortChange() {
-  var id = $('#midi-port').val();
-  var currentId = (port != null ? port.id : null);
+    // Add all MIDI ports to the dropdown box.
+    midiAccess.inputs.forEach(function(port) {
+      addMIDIPort(port);
+      if (port.id == preferredPort) {
+        $('#midi-port').val(port.id);
+      }
+    });
 
-  if (id != currentId) {
-    if (port != null) {
-      port.removeEventListener('midimessage', MIDIMessageEventListener); 
+    midiAccess.addEventListener('statechange', MIDIConnectionEventListener);
+    $('#midi-port').change(onMIDIPortChange);
+    $('#midi-channel').change(onMIDIChannelChange);
+    onMIDIPortChange();
+  };
+
+  var onMIDIReject = function(err) {
+    showError('Failed to obtain access to MIDI.');
+  };
+
+  var onMIDIPortChange = function() {
+    var id = $('#midi-port').val();
+    var currentId = (port != null ? port.id : null);
+
+    if (id != currentId) {
+      if (port != null) {
+        port.removeEventListener('midimessage', MIDIMessageEventListener); 
+        tonnetz.panic();
+      }
+
+      port = midiAccess.inputs.get(id);
+
+      if (port != null) {
+        port.addEventListener('midimessage', MIDIMessageEventListener);
+        console.log('Listening on port ' + port.name);
+
+        if(typeof(Storage) !== 'undefined') {
+          localStorage.setItem('midiPort', port.id);
+        }
+      }
+    }
+  };
+
+  var onMIDIChannelChange = function() {
+    var currentChannel = channel;
+    channel = Number($('#midi-channel').val());
+
+    if (channel != currentChannel)
       tonnetz.panic();
+  };
+
+  var MIDIConnectionEventListener = function(event) {
+    var port = event.port;
+    if (port.type != 'input') return;
+
+    var portOption = $('#midi-port option').filter(function() {
+      return $(this).attr('value') == port.id;
+    });
+
+    if (portOption.length > 0 && port.state == 'disconnected') {
+      showWarning(port.name + ' was disconnected.');
+
+      portOption.remove();
+      onMIDIPortChange();
+    } else if (portOption.length == 0 && port.state == 'connected') {
+      showSuccess(port.name + ' is connected.');
+
+      addMIDIPort(port);
+      onMIDIPortChange();
     }
+  };
 
-    port = midi.inputs.get(id);
+  var addMIDIPort = function(port) {
+    $('#midi-port')
+      .append($("<option></option>")
+      .attr("value", port.id)
+      .text(port.name));
+  };
 
-    if (port != null) {
-      port.addEventListener('midimessage', MIDIMessageEventListener);
-      console.log('Listening on port ' + port.name);
+  var MIDI_NOTE_ON           = 0x90,
+      MIDI_NOTE_OFF          = 0x80,
+      MIDI_CONTROL_CHANGE    = 0xB0,
 
-      if(typeof(Storage) !== 'undefined') {
-        localStorage.setItem('midiPort', port.id);
-      }
-    }
-  }
-}
+      MIDI_CC_SUSTAIN             = 64,
+      MIDI_CC_ALL_CONTROLLERS_OFF = 121,
+      MIDI_CC_ALL_NOTES_OFF       = 123;
 
-function onMIDIChannelChange() {
-  var currentChannel = channel;
-  channel = Number($('#midi-channel').val());
+  var MIDIMessageEventListener = function(event) {
+    var msg = event.data;
+    var msgType = msg[0] & 0xF0;
+    var msgChannel = (msg[0] & 0x0F) + 1;
 
-  if (channel != currentChannel)
-    tonnetz.panic();
-}
+    if (channel > 0 && msgChannel != channel)
+      return;
 
-function MIDIConnectionEventListener(event) {
-  var port = event.port;
-  if (port.type != 'input') return;
-
-  var portOption = $('#midi-port option').filter(function() {
-    return $(this).attr('value') == port.id;
-  });
-
-  if (portOption.length > 0 && port.state == 'disconnected') {
-    showWarning(port.name + ' was disconnected.');
-
-    portOption.remove();
-    onMIDIPortChange();
-  } else if (portOption.length == 0 && port.state == 'connected') {
-    showSuccess(port.name + ' is connected.');
-
-    addMIDIPort(port);
-    onMIDIPortChange();
-  }
-}
-
-function addMIDIPort(port) {
-  $('#midi-port')
-    .append($("<option></option>")
-    .attr("value", port.id)
-    .text(port.name));
-}
-
-var MIDI_NOTE_ON           = 0x90,
-    MIDI_NOTE_OFF          = 0x80,
-    MIDI_CONTROL_CHANGE    = 0xB0,
-
-    MIDI_CC_SUSTAIN             = 64,
-    MIDI_CC_ALL_CONTROLLERS_OFF = 121,
-    MIDI_CC_ALL_NOTES_OFF       = 123;
-
-function MIDIMessageEventListener(event) {
-  var msg = event.data;
-  var msgType = msg[0] & 0xF0;
-  var msgChannel = (msg[0] & 0x0F) + 1;
-
-  if (channel > 0 && msgChannel != channel)
-    return;
-
-  switch (msgType) {
-    case MIDI_NOTE_ON:
-      if (msg[2] != 0) {
-        tonnetz.noteOn(msg[1]);
+    switch (msgType) {
+      case MIDI_NOTE_ON:
+        if (msg[2] != 0) {
+          tonnetz.noteOn(msg[1]);
+          break;
+        }
+        // velocity == 0:  note off
+      case MIDI_NOTE_OFF:
+        tonnetz.noteOff(msg[1]);
         break;
-      }
-      // velocity == 0:  note off
-    case MIDI_NOTE_OFF:
-      tonnetz.noteOff(msg[1]);
-      break;
-    case MIDI_CONTROL_CHANGE:
-      switch (msg[1]) {
-        case MIDI_CC_SUSTAIN:
-          if (msg[2] >= 64) {
-            tonnetz.sustainOn();
-          } else {
+      case MIDI_CONTROL_CHANGE:
+        switch (msg[1]) {
+          case MIDI_CC_SUSTAIN:
+            if (msg[2] >= 64) {
+              tonnetz.sustainOn();
+            } else {
+              tonnetz.sustainOff();
+            }
+            break;
+          case MIDI_CC_ALL_CONTROLLERS_OFF:
             tonnetz.sustainOff();
-          }
-          break;
-        case MIDI_CC_ALL_CONTROLLERS_OFF:
-          tonnetz.sustainOff();
-          break;
-        case MIDI_CC_ALL_NOTES_OFF:
-          tonnetz.allNotesOff();
-          break;
-      }
-      break;
-  }
-}
+            break;
+          case MIDI_CC_ALL_NOTES_OFF:
+            tonnetz.allNotesOff();
+            break;
+        }
+        break;
+    }
+  };
+
+  return module;
+})();

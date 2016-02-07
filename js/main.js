@@ -7,16 +7,9 @@ $(function(){
   triadLabels = document.getElementById("triad-labels");
   $(triadLabels).hide();
 
-  if (navigator.requestMIDIAccess) {
-    navigator.requestMIDIAccess().then(onMIDIInit, onMIDIReject);
-  } else {
-    showError('MIDI support is not present in your browser. You can still use ' +
-              'your computer\'s keyboard.');
-  }
-
-
-  keyboard.init();
   tonnetz.init();
+  midi.init();
+  keyboard.init();
 
   $('#tonnetz').mousewheel(function(event) {
     tonnetz.setDensity(tonnetz.density - event.deltaY);
