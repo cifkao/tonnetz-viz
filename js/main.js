@@ -7,6 +7,7 @@ $(function(){
   triadLabels = document.getElementById("triad-labels");
   $(triadLabels).hide();
 
+  colorscheme.init('default');
   tonnetz.init();
   midi.init();
   keyboard.init();

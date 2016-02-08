@@ -12,11 +12,6 @@ var tonnetz = (function() {
   var LAYOUT_RIEMANN = 'riemann',
       LAYOUT_SONOME = 'sonome';
 
-  var FILL = ['#ffffff', '#aeaeae', '#46629e', '#2c4885'];
-  var STROKE = ['#bababa', '#bababa', '#0e1f5b', '#0e1f5b'];
-  var FILL_MAJ     = '#faf7db',
-      FILL_MIN     = '#eeebc9';
-
   var W,  // width
       H,  // height
       u;  // unit distance (distance between neighbors)
@@ -191,17 +186,24 @@ var tonnetz = (function() {
   var drawTimeout = null;
 
   /**
-   * Request a redraw, but do not draw immediately.
-   * (Draw at most once every 30 ms.)
+   * Request a redraw. If true is passed as a parameter, redraw immediately.
+   * Otherwise, draw at most once every 30 ms.
    */
-  module.draw = function() {
-    if (drawTimeout === null) {
+  module.draw = function(immediately) {
+    if (immediately) {
+      if (drawTimeout !== null) {
+        clearTimeout(drawTimeout);
+      }
+      drawNow();
+    } else if (drawTimeout === null) {
       drawTimeout = setTimeout(drawNow, 30);
     }
   };
 
   var drawNow = function() {
     drawTimeout = null;
+
+    colorscheme.update();
 
     var xUnit = u*Math.sqrt(3)/2;
     var uW = Math.ceil(Math.ceil(W/xUnit*2)/2);
@@ -245,7 +247,7 @@ var tonnetz = (function() {
             ctx.lineTo(c.topPos.x, c.topPos.y);
             ctx.lineTo(c.leftPos.x, c.leftPos.y);
             ctx.closePath();
-            ctx.fillStyle = FILL_MIN;
+            ctx.fillStyle = colorscheme.minorFill;
             ctx.fill();
           }
           if (rightOn) { // right face (major triad)
@@ -255,7 +257,7 @@ var tonnetz = (function() {
             ctx.lineTo(c.topPos.x, c.topPos.y);
             ctx.lineTo(c.rightPos.x, c.rightPos.y);
             ctx.closePath();
-            ctx.fillStyle = FILL_MAJ;
+            ctx.fillStyle = colorscheme.majorFill;
             ctx.fill();
           }
         }
@@ -301,8 +303,8 @@ var tonnetz = (function() {
         ctx.arc(x, y, u/5, 0, Math.PI * 2, false);
         ctx.closePath();
 
-        ctx.fillStyle = FILL[tones[tone].state];
-        ctx.strokeStyle = STROKE[tones[tone].state];
+        ctx.fillStyle = colorscheme.fill[tones[tone].state];
+        ctx.strokeStyle = colorscheme.stroke[tones[tone].state];
         toneGrid[tone][i].label.className = 'state-' + STATE_NAMES[tones[tone].state];
 
         if (tones[tone].state == STATE_OFF) {
@@ -327,7 +329,7 @@ var tonnetz = (function() {
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo(endpoint.x, endpoint.y);
-    ctx.strokeStyle = STROKE[state];
+    ctx.strokeStyle = colorscheme.stroke[state];
     ctx.lineWidth = (state != STATE_OFF) ? 1.5 : 1;
     ctx.stroke();
   };
@@ -441,7 +443,7 @@ var tonnetz = (function() {
       }
     }
 
-    drawNow();
+    this.draw(true);
   };
 
   return module;
