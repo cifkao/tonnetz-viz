@@ -7,6 +7,8 @@ visualizes it in real time using the [Tonnetz]
 (https://webaudio.github.io/web-midi-api/), which is currently supported by
 Chrome and Opera. It can also be controlled using the computer keyboard.
 
+![screenshot](images/screenshot-apollo.png)
+
 The Tonnetz is a tonal network – a diagram representing tonal space. It can
 be used to visualize harmonic relationships in music. Each node in the diagram
 corresponds to one of the 12 tones and is connected to 6 adjacent nodes. The
