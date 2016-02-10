@@ -6,6 +6,7 @@ visualizes it in real time using the [Tonnetz]
 (https://en.wikipedia.org/wiki/Tonnetz). It uses the [Web MIDI API]
 (https://webaudio.github.io/web-midi-api/), which is currently supported by
 Chrome and Opera. It can also be controlled using the computer keyboard.
+[**Try it!**](https://cifkao.github.io/tonnetz-viz/)
 
 ![screenshot](images/screenshot-apollo.png)
 
