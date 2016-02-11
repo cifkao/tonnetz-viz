@@ -54,6 +54,11 @@ var colorscheme = (function() {
       deleteScheme();
     });
 
+    $('#scheme-github').click(function(event) {
+      event.preventDefault();
+      addSchemeOnGitHub();
+    });
+
     $('#save-scheme').click(saveScheme);
   };
 
@@ -99,7 +104,9 @@ var colorscheme = (function() {
     this.minorFill = data['faces']['minor']['fill'];
     this.majorFill = data['faces']['major']['fill'];
 
-    $('#edit-scheme').parent().toggle(name.startsWith('custom'));
+    $('#edit-scheme').parent()
+      .add($('#scheme-github').parent())
+      .toggle(name.startsWith('custom'));
   };
 
   /**
@@ -149,8 +156,40 @@ var colorscheme = (function() {
     storeCustomSchemes();
   };
 
+  var addSchemeOnGitHub = function() {
+    var scheme = $.extend({}, module.scheme.data);
+    scheme['name'] = scheme['name'].trim();
+
+    var commitMessage = 'Add the \'' + scheme['name'] + '\' color scheme';
+
+    if(scheme['name'].toLowerCase() == 'custom' || scheme['name'].length == 0) {
+      scheme['name'] = 'PLEASE GIVE ME A NAME';
+      commitMessage = 'Add a new color scheme';
+    }
+
+    // Create a filename for this color scheme
+    var name = scheme['name']
+      .replace(/[^a-z0-9]/gi, '-')
+      .replace(/-+/g, '-')
+      .replace(/-$/g, '')
+      .replace(/^-/g, '')
+      .toLowerCase();
+
+    // Generate the script contents
+    var contents = 'colorscheme.addScheme("' + name + '", ' +
+        JSON.stringify(scheme, null, 2) +
+        ');';
+
+    // Open the 'New file' page on GitHub
+    window.open('https://github.com/cifkao/tonnetz-viz/new/master/color-schemes/' +
+        '?filename=color-schemes/' + name + '.js' +
+        '&value=' + encodeURIComponent(contents) +
+        '&message=' + encodeURIComponent(commitMessage)
+    );
+  };
+
   var addStylesheet = function(scheme) {
-    var style = document.createElement("style");
+    var style = document.createElement('style');
     style.appendChild(document.createTextNode(""));
     document.head.appendChild(style);
     var sheet = style.sheet || style.styleSheet;
