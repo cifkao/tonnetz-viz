@@ -8,6 +8,7 @@ var colorscheme = (function() {
   module.scheme = null;
 
   var schemes = {};
+  var customCounter = 1;
 
   module.init = function(schemeName) {
     this.setScheme(schemeName);
@@ -16,13 +17,33 @@ var colorscheme = (function() {
       module.setScheme($('#color-scheme').val());
       tonnetz.draw(true);
     });
+
+    $('#clone-scheme').click(function(event) {
+      event.preventDefault();
+
+      // clone the current scheme and add it with a new name
+      var name = 'custom' + customCounter;
+      var data = $.extend(true, {}, module.scheme.data,
+        {'display-name': 'Custom ' + customCounter++});
+      module.addScheme(name, data);
+      $('#color-scheme').val(name).change();
+
+      showEditor();
+    });
+
+    $('#edit-scheme').click(function(event) {
+      event.preventDefault();
+      showEditor();
+    });
   };
 
-  module.addScheme = function(data) {
-    var name = data['name'], displayName = data['display-name'];
-    data.stylesheet = addStylesheet(data);
-    data.name = name;
-    schemes[name] = data;
+  module.addScheme = function(name, data) {
+    var displayName = data['display-name'];
+    schemes[name] = {
+      'data': data,
+      'name': name,
+      'stylesheet': addStylesheet(data)
+    };
 
     $('#color-scheme')
       .append($("<option></option>")
@@ -31,9 +52,8 @@ var colorscheme = (function() {
   };
 
   module.setScheme = function(name) {
-    var data = schemes[name];
-
-    this.scheme = data;
+    this.scheme = schemes[name];
+    var data = this.scheme.data;
 
     this.stroke = [];
     this.fill = [];
@@ -44,6 +64,8 @@ var colorscheme = (function() {
 
     this.minorFill = data['faces']['minor']['fill'];
     this.majorFill = data['faces']['major']['fill'];
+
+    $('#edit-scheme').parent().toggle(name.startsWith('custom'));
   };
 
   /**
@@ -56,6 +78,14 @@ var colorscheme = (function() {
       if (name != this.scheme.name)
         schemes[name].stylesheet.disabled = true;
     }
+  };
+
+
+  var showEditor = function() {
+    $('#scheme-code').val(JSON.stringify(module.scheme.data, null, 2));
+
+    collapseNavAndTabs();
+    $('#scheme-editor').modal('show');
   };
 
   var addStylesheet = function(scheme) {

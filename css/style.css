@@ -89,6 +89,17 @@ a:link.external:after {
   z-index: 1001;
 }
 
+.modal-body textarea {
+  resize: vertical;
+}
+
+#scheme-code {
+  font-family: monospace;
+  min-height: 7em;
+  height: 15em;
+}
+
+
 #tonnetz {
   position: fixed;
   z-index: -1;

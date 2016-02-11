@@ -91,7 +91,7 @@ function noTab() {
 }
 
 function somethingHasFocus() {
-  return $(':focus').is('input, select, button');
+  return $(':focus').is('input, select, button, textarea');
 }
 
 function showAlert(text, type) {

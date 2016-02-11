@@ -1,5 +1,4 @@
-colorscheme.addScheme({
-  "name": "apollo",
+colorscheme.addScheme("apollo", {
   "display-name": "Apollo",
   "background": "#e9edea",
   "nodes": {
