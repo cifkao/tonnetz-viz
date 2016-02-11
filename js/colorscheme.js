@@ -46,6 +46,11 @@ var colorscheme = (function() {
       showEditor();
     });
 
+    $('#delete-scheme').click(function(event) {
+      event.preventDefault();
+      deleteScheme();
+    });
+
     $('#save-scheme').click(saveScheme);
   };
 
@@ -119,6 +124,16 @@ var colorscheme = (function() {
     tonnetz.draw(true);
 
     $('#scheme-editor').modal('hide');
+  };
+
+  var deleteScheme = function() {
+    $(module.scheme.stylesheet.ownerNode).remove();
+    delete schemes[module.scheme.name];
+    var $option = $('#color-scheme option')
+        .filter(function() { return $(this).attr('value') == module.scheme.name; });
+    $('#color-scheme').val($option.prev().attr('value'));
+    $option.remove();
+    $('#color-scheme').change();
   };
 
   var addStylesheet = function(scheme) {
