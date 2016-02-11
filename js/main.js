@@ -48,7 +48,10 @@ $(function(){
 
   $('#tabs').on('hidden.bs.collapse', noTab);
   $('#tonnetz').click(collapseNavAndTabs);
-  $('.navbar-brand').click(collapseNavAndTabs);
+  $('.navbar-brand').click(function(event) {
+    event.preventDefault();
+    collapseNavAndTabs();
+  });
 
   $('#panic').click(function() { tonnetz.panic(); });
   $('#enable-sustain').click(function() { tonnetz.toggleSustainEnabled(); });
