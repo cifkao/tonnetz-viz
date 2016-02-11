@@ -106,9 +106,11 @@ var colorscheme = (function() {
     this.minorFill = data['faces']['minor']['fill'];
     this.majorFill = data['faces']['major']['fill'];
 
+    var custom = name.startsWith('custom');
     $('#edit-scheme').parent()
       .add($('#scheme-github').parent())
-      .toggle(name.startsWith('custom'));
+      .toggle(custom);
+    $('#clone-scheme span').toggle(!custom);
   };
 
   /**
