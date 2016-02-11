@@ -206,6 +206,8 @@ var colorscheme = (function() {
     $.each(['minor', 'major'], function(i, type) {
       sheet.insertRule('#triad-labels .' + type + ' { color: ' +
         scheme['faces'][type]['label-off'] + '}', 0);
+      sheet.insertRule('#triad-labels .' + type + '.state-ON { color: ' +
+        scheme['faces'][type]['label-on'] + '}', 0);
     });
 
     sheet.disabled = true;
