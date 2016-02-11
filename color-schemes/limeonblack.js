@@ -1,5 +1,5 @@
 colorscheme.addScheme("limeonblack", {
-  "display-name": "Lime on Black",
+  "name": "Lime on Black",
   "background": "#0a0a0a",
   "nodes": {
     "OFF": {

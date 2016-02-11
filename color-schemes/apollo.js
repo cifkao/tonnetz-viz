@@ -1,5 +1,5 @@
 colorscheme.addScheme("apollo", {
-  "display-name": "Apollo",
+  "name": "Apollo",
   "background": "#e9edea",
   "nodes": {
     "OFF": {

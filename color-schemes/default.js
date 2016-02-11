@@ -1,5 +1,5 @@
 colorscheme.addScheme("default", {
-  "display-name": "Default",
+  "name": "Default",
   "background": "#ffffff",
   "nodes": {
     "OFF": {

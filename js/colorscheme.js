@@ -9,6 +9,7 @@ var colorscheme = (function() {
 
   var schemes = {};
   var customCounter = 1;
+  var editor = null;
 
   module.init = function(schemeName) {
     this.setScheme(schemeName);
@@ -18,13 +19,22 @@ var colorscheme = (function() {
       tonnetz.draw(true);
     });
 
+    editor = new JSONEditor(document.getElementById('scheme-editor-holder'), {
+      schema: jsonSchema,
+      theme: 'bootstrap3',
+      iconlib: 'bootstrap3',
+      object_layout: 'grid',
+      disable_edit_json: true,
+      disable_properties: true
+    });
+
     $('#clone-scheme').click(function(event) {
       event.preventDefault();
 
       // clone the current scheme and add it with a new name
       var name = 'custom' + customCounter;
       var data = $.extend(true, {}, module.scheme.data,
-        {'display-name': 'Custom ' + customCounter++});
+        {'name': 'Custom ' + customCounter++});
       module.addScheme(name, data);
       $('#color-scheme').val(name).change();
 
@@ -35,20 +45,36 @@ var colorscheme = (function() {
       event.preventDefault();
       showEditor();
     });
+
+    $('#save-scheme').click(saveScheme);
   };
 
+  /**
+   * Add or replace a color scheme.
+   */
   module.addScheme = function(name, data) {
-    var displayName = data['display-name'];
+    var displayName = data['name'];
+
+    if (schemes[name]) {  // Replacing an existing scheme
+      // Remove old stylesheet
+      $(schemes[name].stylesheet.ownerNode).remove();
+
+      // Change option text
+      $('#color-scheme option')
+        .filter(function() { return $(this).attr('value') == name; })
+        .text(displayName);
+    } else {
+      $('#color-scheme')
+        .append($('<option></option>')
+        .attr('value', name)
+        .text(displayName));
+    }
+
     schemes[name] = {
       'data': data,
       'name': name,
       'stylesheet': addStylesheet(data)
     };
-
-    $('#color-scheme')
-      .append($("<option></option>")
-      .attr("value", name)
-      .text(displayName));
   };
 
   module.setScheme = function(name) {
@@ -80,12 +106,19 @@ var colorscheme = (function() {
     }
   };
 
-
   var showEditor = function() {
-    $('#scheme-code').val(JSON.stringify(module.scheme.data, null, 2));
+    editor.setValue(module.scheme.data);
 
-    collapseNavAndTabs();
+    //collapseNavAndTabs();
     $('#scheme-editor').modal('show');
+  };
+
+  var saveScheme = function() {
+    module.addScheme(module.scheme.name, editor.getValue());
+    module.setScheme(module.scheme.name);
+    tonnetz.draw(true);
+
+    $('#scheme-editor').modal('hide');
   };
 
   var addStylesheet = function(scheme) {
@@ -109,6 +142,144 @@ var colorscheme = (function() {
     sheet.disabled = true;
 
     return sheet;
+  };
+
+  var jsonSchema = {
+    "type": "object",
+    "headerTemplate": "{{ self.name }}",
+    "options": {
+      "disable_collapse": true
+    },
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "background": {
+        "type": "string",
+        "format": "color"
+      },
+      "nodes": {
+        "type": "object",
+        "properties": {
+          "OFF": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "format": "color"
+              },
+              "fill": {
+                "type": "string",
+                "format": "color"
+              },
+              "stroke": {
+                "type": "string",
+                "format": "color"
+              }
+            },
+            "additionalProperties": false
+          },
+          "GHOST": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "format": "color"
+              },
+              "fill": {
+                "type": "string",
+                "format": "color"
+              },
+              "stroke": {
+                "type": "string",
+                "format": "color"
+              }
+            },
+            "additionalProperties": false
+          },
+          "SUSTAIN": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "format": "color"
+              },
+              "fill": {
+                "type": "string",
+                "format": "color"
+              },
+              "stroke": {
+                "type": "string",
+                "format": "color"
+              }
+            },
+            "additionalProperties": false
+          },
+          "ON": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "format": "color"
+              },
+              "fill": {
+                "type": "string",
+                "format": "color"
+              },
+              "stroke": {
+                "type": "string",
+                "format": "color"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "faces": {
+        "type": "object",
+        "properties": {
+          "major": {
+            "type": "object",
+            "properties": {
+              "label-off": {
+                "type": "string",
+                "format": "color"
+              },
+              "label-on": {
+                "type": "string",
+                "format": "color"
+              },
+              "fill": {
+                "type": "string",
+                "format": "color"
+              }
+            },
+            "additionalProperties": false
+          },
+          "minor": {
+            "type": "object",
+            "properties": {
+              "label-off": {
+                "type": "string",
+                "format": "color"
+              },
+              "label-on": {
+                "type": "string",
+                "format": "color"
+              },
+              "fill": {
+                "type": "string",
+                "format": "color"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "additionalProperties": false
   };
 
   return module;

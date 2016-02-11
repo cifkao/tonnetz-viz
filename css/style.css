@@ -89,14 +89,23 @@ a:link.external:after {
   z-index: 1001;
 }
 
-.modal-body textarea {
-  resize: vertical;
+#scheme-editor .modal-dialog {
+  height: calc(100% - 60px);
 }
 
-#scheme-code {
-  font-family: monospace;
-  min-height: 7em;
-  height: 15em;
+#scheme-editor .modal-content {
+  height: 100%;
+}
+
+#scheme-editor .modal-body {
+  max-height: calc(100% - 120px);
+  overflow-y: scroll;
+}
+
+#scheme-editor-holder h3 {
+  font-size: 120%;
+  margin-top: 0;
+  margin-bottom: 0.5ex;
 }
 
 
