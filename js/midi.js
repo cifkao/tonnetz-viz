@@ -19,10 +19,7 @@ var midi = (function() {
     midiAccess = mAccess;
 
     // Get last used port ID from local storage.
-    var preferredPort = null;
-    if(typeof(Storage) !== 'undefined') {
-      preferredPort = localStorage.getItem('midiPort');
-    }
+    var preferredPort = storage.get('midiPort');
 
     // Add all MIDI ports to the dropdown box.
     midiAccess.inputs.forEach(function(port) {
@@ -58,9 +55,7 @@ var midi = (function() {
         port.addEventListener('midimessage', MIDIMessageEventListener);
         console.log('Listening on port ' + port.name);
 
-        if(typeof(Storage) !== 'undefined') {
-          localStorage.setItem('midiPort', port.id);
-        }
+        storage.set('midiPort', port.id);
       }
     }
   };
