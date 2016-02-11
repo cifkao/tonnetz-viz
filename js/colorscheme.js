@@ -8,10 +8,13 @@ var colorscheme = (function() {
   module.scheme = null;
 
   var schemes = {};
-  var customCounter = 1;
+  var customSchemes = {};
+  var customCounter;
   var editor = null;
 
   module.init = function(schemeName) {
+    loadCustomSchemes();
+
     this.setScheme(schemeName);
 
     $('#color-scheme').change(function() {
@@ -34,7 +37,7 @@ var colorscheme = (function() {
       // clone the current scheme and add it with a new name
       var name = 'custom' + customCounter;
       var data = $.extend(true, {}, module.scheme.data,
-        {'name': 'Custom ' + customCounter++});
+        {'name': 'Custom'});
       module.addScheme(name, data);
       $('#color-scheme').val(name).change();
 
@@ -57,7 +60,7 @@ var colorscheme = (function() {
   /**
    * Add or replace a color scheme.
    */
-  module.addScheme = function(name, data) {
+  module.addScheme = function(name, data, custom) {
     var displayName = data['name'];
 
     if (schemes[name]) {  // Replacing an existing scheme
@@ -119,21 +122,31 @@ var colorscheme = (function() {
   };
 
   var saveScheme = function() {
-    module.addScheme(module.scheme.name, editor.getValue());
-    module.setScheme(module.scheme.name);
+    var name = module.scheme.name;
+
+    customSchemes[name] = editor.getValue();
+    module.addScheme(name, customSchemes[name]);
+    module.setScheme(name);
     tonnetz.draw(true);
+
+    storeCustomSchemes();
 
     $('#scheme-editor').modal('hide');
   };
 
   var deleteScheme = function() {
+    var name = module.scheme.name;
+
     $(module.scheme.stylesheet.ownerNode).remove();
-    delete schemes[module.scheme.name];
+    delete schemes[name];
+    delete customSchemes[name];
     var $option = $('#color-scheme option')
-        .filter(function() { return $(this).attr('value') == module.scheme.name; });
+        .filter(function() { return $(this).attr('value') == name; });
     $('#color-scheme').val($option.prev().attr('value'));
     $option.remove();
     $('#color-scheme').change();
+
+    storeCustomSchemes();
   };
 
   var addStylesheet = function(scheme) {
@@ -157,6 +170,19 @@ var colorscheme = (function() {
     sheet.disabled = true;
 
     return sheet;
+  };
+
+  var loadCustomSchemes = function() {
+    customCounter = Number(storage.get('colorscheme.customCounter', '1'));
+    customSchemes = JSON.parse(storage.get('colorscheme.customSchemes', '{}'));
+    for (name in customSchemes) {
+      module.addScheme(name, customSchemes[name]);
+    }
+  };
+
+  var storeCustomSchemes = function() {
+    storage.set('colorscheme.customCounter', customCounter);
+    storage.set('colorscheme.customSchemes', JSON.stringify(customSchemes));
   };
 
   var jsonSchema = {
