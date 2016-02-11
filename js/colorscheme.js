@@ -34,6 +34,8 @@ var colorscheme = (function() {
     $('#clone-scheme').click(function(event) {
       event.preventDefault();
 
+      customCounter++;
+
       // clone the current scheme and add it with a new name
       var name = 'custom' + customCounter;
       var data = $.extend(true, {}, module.scheme.data,
@@ -212,7 +214,7 @@ var colorscheme = (function() {
   };
 
   var loadCustomSchemes = function() {
-    customCounter = Number(storage.get('colorscheme.customCounter', '1'));
+    customCounter = Number(storage.get('colorscheme.customCounter', '0'));
     customSchemes = JSON.parse(storage.get('colorscheme.customSchemes', '{}'));
     for (name in customSchemes) {
       module.addScheme(name, customSchemes[name]);
