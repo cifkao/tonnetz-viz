@@ -25,7 +25,7 @@ var colorscheme = (function() {
     editor = new JSONEditor(document.getElementById('scheme-editor-holder'), {
       schema: jsonSchema,
       theme: 'bootstrap3',
-      iconlib: 'bootstrap3',
+      iconlib: 'fontawesome4',
       object_layout: 'grid',
       disable_edit_json: true,
       disable_properties: true

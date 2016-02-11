@@ -8,6 +8,7 @@
     <meta name="description" content="TonnetzViz is a web-based music visualizer that receives MIDI input and visualizes it in real time using a tonal network called the Tonnetz.">
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
     <!--[if lt IE 9]>
@@ -31,19 +32,19 @@
           <ul class="nav navbar-nav" role="tablist">
             <li>
               <a href="#controls" data-toggle="tab" role="tab" aria-controls="controls">
-                <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                <i class="fa fa-fw fa-gamepad" aria-hidden="true"></i>
                 Controls<span class="caret"></span>
               </a>
             </li>
             <li>
               <a href="#appearance" data-toggle="tab" role="tab" aria-controls="appearance">
-                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                <i class="fa fa-fw fa-eye" aria-hidden="true"></i>
                 Appearance<span class="caret"></span>
               </a>
             </li>
             <li>
               <a href="#about" data-toggle="tab" role="tab" aria-controls="about">
-                <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                <i class="fa fa-fw fa-question" aria-hidden="true"></i>
                 About<span class="caret"></span>
               </a>
             </li>
@@ -92,7 +93,7 @@
                   <div class="col-xs-4 col-sm-2">
                     <label class="control-label">&nbsp;</label>
                     <button type="button" id="panic" class="btn btn-default btn-block" data-toggle="tooltip" title="All notes off">
-                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <i class="fa fa-fw fa-ban" aria-hidden="true"></i>
                     Panic</button>
                   </div>
                 </div>
@@ -141,12 +142,15 @@
             <div class="panel-body">
               <div class="form-horizontal">
                 <div class="form-group">
-                  <label for="color-scheme" class="control-label col-xs-5 col-sm-4">Colour scheme</label>
+                  <label for="color-scheme" class="control-label col-xs-5 col-sm-4 col-md-3">Colour scheme</label>
                   <div class="col-xs-6 col-sm-4">
                     <select class="form-control" name="color-scheme" id="color-scheme">
                     </select>
-                    <span class="help-block"><a href="#" id="clone-scheme">Clone</a><span>,
-                        <a href="#" id="edit-scheme">edit</a> or <a href="#" id="delete-scheme">delete</a></span> this scheme</span>
+                    <span class="help-block">
+                        <i class="fa fa-fw fa-pencil" aria-hidden="true"></i>
+                        <a href="#" id="clone-scheme">Clone</a><span>,
+                        <a href="#" id="edit-scheme">edit</a> or <a href="#" id="delete-scheme">delete</a></span> this scheme
+                    </span>
                   </div>
                 </div>
                 <div class="form-group">
