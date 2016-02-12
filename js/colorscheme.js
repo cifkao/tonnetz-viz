@@ -234,15 +234,17 @@ var colorscheme = (function() {
     "type": "object",
     "headerTemplate": "{{ self.name }}",
     "options": {
-      "disable_collapse": true
+      "disable_collapse": true,
+      "disable_edit_json": false
     },
     "properties": {
       "name": {
-        "type": "string"
+        "type": "string",
+        "default": "Custom"
       },
       "background": {
         "type": "string",
-        "format": "color"
+        "format": "color",
       },
       "nodes": {
         "type": "object",
@@ -263,6 +265,9 @@ var colorscheme = (function() {
                 "format": "color"
               }
             },
+            "required": [
+              "label", "fill", "stroke"
+            ],
             "additionalProperties": false
           },
           "GHOST": {
@@ -281,6 +286,9 @@ var colorscheme = (function() {
                 "format": "color"
               }
             },
+            "required": [
+              "label", "fill", "stroke"
+            ],
             "additionalProperties": false
           },
           "SUSTAIN": {
@@ -299,6 +307,9 @@ var colorscheme = (function() {
                 "format": "color"
               }
             },
+            "required": [
+              "label", "fill", "stroke"
+            ],
             "additionalProperties": false
           },
           "ON": {
@@ -317,9 +328,15 @@ var colorscheme = (function() {
                 "format": "color"
               }
             },
+            "required": [
+              "label", "fill", "stroke"
+            ],
             "additionalProperties": false
           }
         },
+        "required": [
+          "OFF", "GHOST", "SUSTAIN", "ON"
+        ],
         "additionalProperties": false
       },
       "faces": {
@@ -341,6 +358,9 @@ var colorscheme = (function() {
                 "format": "color"
               }
             },
+            "required": [
+              "label-off", "label-on", "fill"
+            ],
             "additionalProperties": false
           },
           "minor": {
@@ -359,12 +379,21 @@ var colorscheme = (function() {
                 "format": "color"
               }
             },
+            "required": [
+              "label-off", "label-on", "fill"
+            ],
             "additionalProperties": false
           }
         },
+        "required": [
+          "major", "minor"
+        ],
         "additionalProperties": false
       }
     },
+    "required": [
+      "name", "background", "nodes", "faces"
+    ],
     "additionalProperties": false
   };
 
