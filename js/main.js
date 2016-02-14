@@ -64,19 +64,27 @@ $(function(){
       $(this).closest('.form-group').removeClass('has-error');
     }
   });
-  $('input[type=radio][name=layout]').change(function () {
+  $('input[type=radio][name=layout]').change(function() {
     tonnetz.setLayout($(this).val());
   });
 
   $('[data-toggle="tooltip"]').tooltip();
 
   // Open links with data-popup="true" in a new window.
-  $(function() {
-    $('body').on('click', 'a[data-popup]', function(event) {
-      window.open($(this)[0].href);
-      event.preventDefault();
-    });
+  $('body').on('click', 'a[data-popup]', function(event) {
+    window.open($(this)[0].href);
+    event.preventDefault();
   });
+
+  // Generate mailto: link
+  $('a[href="mailto:"]').attr('href', (function() {
+    var addr = '';
+    var i = 0;
+    do {
+      addr += 'oafcn@kodcamri.'[i%15];
+    } while ((i += 4) < 60);
+    return 'mailto:' + addr;
+  })());
 });
 
 function collapseNav() {
