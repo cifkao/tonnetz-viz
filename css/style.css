@@ -1,11 +1,13 @@
 a:link.external:after {
-  font-family: 'Glyphicons Halflings';
+  font-family: 'FontAwesome';
   font-style: normal;
   font-weight: normal;
-  font-size: 60%;
-  margin-left: 0.25em;
+  font-size: 75%;
+  display: inline-block;
+  margin-left: 0.3em;
   margin-right: 0.1em;
-  content: "\e164";
+  text-decoration: none;
+  content: "\f08e";
 }
 
 
