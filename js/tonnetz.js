@@ -21,8 +21,8 @@ var tonnetz = (function() {
   module.layout = LAYOUT_RIEMANN;
 
   var toneGrid = [];
-  var tones = [];
-  var pitches = {};
+  var tones;
+  var channels;
 
   var sustainEnabled = true,
       sustain = false;
@@ -31,76 +31,120 @@ var tonnetz = (function() {
 
 
   module.init = function() {
-    for (var i=0; i<12; i++) {
-      tones.push({
+    tones = $.map(Array(12), function(_, i) {
+      return {
         'pitch': i,
         'name': TONE_NAMES[i],
         'state': STATE_OFF,
-        'count': 0,
-        'released': null,       // the last time the note was on
-        'cache': {}             // temporary data
-      });
-    }
+        'byChannel': {},     // counts of this tone in each channel
+        'channelsSust': {},  // channels where the tone is sustained
+        'released': null,    // the last time the note was on
+        'cache': {}          // temporary data
+      };
+    });
+
+    channels = $.map(Array(16), function(_, i) {
+      return {
+        'number': i,
+        'pitches': {},
+        'sustTones': {},
+        'sustain': false
+      };
+    });
 
     this.rebuild();
     window.onresize = function() { module.rebuild(); };
   };
 
 
-  module.noteOn = function(pitch) {
-    if (!(pitch in pitches)) {
+  module.noteOn = function(c, pitch) {
+    if (!(pitch in channels[c].pitches)) {
       var i = pitch%12;
       tones[i].state = STATE_ON;
-      tones[i].count++;
-      pitches[pitch] = 1;
+
+      if (!tones[i].byChannel[c])
+        tones[i].byChannel[c] = 1;
+      else
+        tones[i].byChannel[c]++;
+
+      channels[c].pitches[pitch] = 1;
+
+      // Remove sustain
+      delete tones[i].channelsSust[c];
+      delete channels[c].sustTones[i];
     }
     this.draw();
   };
 
-  module.noteOff = function(pitch) {
-    if (pitch in pitches) {
+  module.noteOff = function(c, pitch) {
+    if (pitch in channels[c].pitches) {
       var i = pitch%12;
-      delete pitches[pitch];
-      tones[i].count--;
-      if (tones[i].count == 0) {
-        if (sustainEnabled && sustain) {
-          tones[i].state = STATE_SUST;
-        } else {
-          // change state to STATE_GHOST or STATE_OFF
-          // depending on setting
-          releaseTone(tones[i]);
+      delete channels[c].pitches[pitch];
+      tones[i].byChannel[c]--;
+
+      // Check if this was the last instance of the tone in this channel
+      if (tones[i].byChannel[c] === 0) {
+        delete tones[i].byChannel[c];
+
+        // Check if this was the last channel with this tone
+        if ($.isEmptyObject(tones[i].byChannel)) {
+          if (sustainEnabled && channels[c].sustain) {
+            tones[i].state = STATE_SUST;
+            channels[c].sustTones[i] = 1;
+          } else {
+            // change state to STATE_GHOST or STATE_OFF
+            // depending on setting
+            releaseTone(tones[i]);
+          }
         }
       }
+
       this.draw();
     }
   };
 
-  module.allNotesOff = function() {
-    pitches = {};
+  module.allNotesOff = function(c) {
     for (var i=0; i<12; i++) {
-      tones[i].count = 0;
-      tones[i].state = STATE_OFF;
+      delete tones[i].byChannel[c];
+      delete tones[i].channelsSust[c];
+
+      // Check if this tone is turned off in all channels
+      if ($.isEmptyObject(tones[i].byChannel)) {
+        tones[i].state = STATE_OFF;
+      }
     }
+
+    channels[c].pitches = {};
+    channels[c].sustTones = {};
+
     this.draw();
   };
 
-  module.sustainOn = function() {
-    sustain = true;
+  module.sustainOn = function(c) {
+    channels[c].sustain = true;
   };
 
-  module.sustainOff = function() {
-    sustain = false;
+  module.sustainOff = function(c) {
+    channels[c].sustain = false;
+    channels[c].sustTones = {};
 
     for (var i=0; i<12; i++) {
-      if (tones[i].state == STATE_SUST)
+      delete tones[i].channelsSust[c];
+
+      if (tones[i].state == STATE_SUST &&
+          $.isEmptyObject(tones[i].channelsSust)) {
         releaseTone(tones[i]);
+      }
     }
+
     this.draw();
   };
 
   module.panic = function() {
-    this.allNotesOff();
-    this.sustainOff();
+    for (var i=0; i<16; i++) {
+      this.sustainOff(i);
+      this.allNotesOff(i);
+    }
   };
 
 

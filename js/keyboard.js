@@ -38,13 +38,20 @@ var keyboard = (function() {
       return null;
   };
 
+  var getChannel = function() {
+    var channel = Number($('#midi-channel').val());
+    if (channel == -1)
+      channel = 0;
+    return channel;
+  };
+
 
   var onKeyDown = function(event) {
     if (somethingHasFocus()) return;
 
     var note = getPitchFromKeyboardEvent(event);
     if (note != null) {
-      tonnetz.noteOn(note);
+      tonnetz.noteOn(getChannel(), note);
     }
   };
 
@@ -53,7 +60,7 @@ var keyboard = (function() {
 
     var note = getPitchFromKeyboardEvent(event);
     if (note != null) {
-      tonnetz.noteOff(note);
+      tonnetz.noteOff(getChannel(), note);
     }
   };
 

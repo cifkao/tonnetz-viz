@@ -107,35 +107,35 @@ var midi = (function() {
   var MIDIMessageEventListener = function(event) {
     var msg = event.data;
     var msgType = msg[0] & 0xF0;
-    var msgChannel = (msg[0] & 0x0F) + 1;
+    var msgChannel = msg[0] & 0x0F;
 
-    if (channel > 0 && msgChannel != channel)
+    if (channel >= 0 && msgChannel != channel)
       return;
 
     switch (msgType) {
       case MIDI_NOTE_ON:
         if (msg[2] != 0) {
-          tonnetz.noteOn(msg[1]);
+          tonnetz.noteOn(msgChannel, msg[1]);
           break;
         }
         // velocity == 0:  note off
       case MIDI_NOTE_OFF:
-        tonnetz.noteOff(msg[1]);
+        tonnetz.noteOff(msgChannel, msg[1]);
         break;
       case MIDI_CONTROL_CHANGE:
         switch (msg[1]) {
           case MIDI_CC_SUSTAIN:
             if (msg[2] >= 64) {
-              tonnetz.sustainOn();
+              tonnetz.sustainOn(msgChannel);
             } else {
-              tonnetz.sustainOff();
+              tonnetz.sustainOff(msgChannel);
             }
             break;
           case MIDI_CC_ALL_CONTROLLERS_OFF:
-            tonnetz.sustainOff();
+            tonnetz.sustainOff(msgChannel);
             break;
           case MIDI_CC_ALL_NOTES_OFF:
-            tonnetz.allNotesOff();
+            tonnetz.allNotesOff(msgChannel);
             break;
         }
         break;
