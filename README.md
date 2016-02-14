@@ -28,6 +28,7 @@ your computer's keyboard to control the app.
 
 Links
 -----
+* [Live version](https://cifkao.github.io/tonnetz-viz/)
 * [Videos](https://www.youtube.com/playlist?list=PLPdw6Kin7U86ccF4atsm7E9HkWPwFGKvj) on YouTube
 * [GitHub repository](https://github.com/cifkao/tonnetz-viz)
 * [Wikipedia article](https://en.wikipedia.org/wiki/Tonnetz) about the Tonnetz
