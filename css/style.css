@@ -150,3 +150,7 @@ a:link.external:after {
 .navbar-inverse .navbar-brand:hover {
   color: #ffffff;
 }
+
+.fa-ul li {
+  margin-bottom: 0.25em;
+}
