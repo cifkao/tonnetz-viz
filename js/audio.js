@@ -59,7 +59,8 @@ var audio = (function() {
 
     $('#sound-on').click(function() {
       enabled = !enabled;
-      $(this).next('i').toggleClass('fa-volume-off fa-volume-up');
+      $(this).next('i').add('nav a[href="#sound"] i.fa')
+        .toggleClass('fa-volume-off fa-volume-up');
     });
 
     $('#synth-type').change(function() {

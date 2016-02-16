@@ -104,12 +104,16 @@ var midi = (function() {
       MIDI_CC_ALL_CONTROLLERS_OFF = 121,
       MIDI_CC_ALL_NOTES_OFF       = 123;
 
+  var ALL_CHANNELS = -1,
+      ALL_EXCEPT_DRUMS = -10;
+
   var MIDIMessageEventListener = function(event) {
     var msg = event.data;
     var msgType = msg[0] & 0xF0;
     var msgChannel = msg[0] & 0x0F;
 
-    if (channel >= 0 && msgChannel != channel)
+    if ((channel >= 0 && msgChannel != channel) ||
+        (channel == ALL_EXCEPT_DRUMS && msgChannel == 9))
       return;
 
     switch (msgType) {

@@ -46,7 +46,7 @@
             </li>
             <li>
               <a href="#sound" data-toggle="tab" role="tab" aria-controls="sound">
-                <i class="fa fa-fw fa-volume-up" aria-hidden="true"></i>
+                <i class="fa fa-fw fa-volume-off" aria-hidden="true"></i>
                 Sound<span class="caret"></span>
               </a>
             </li>
@@ -79,6 +79,7 @@
                     <label for="midi-channel" class="control-label">MIDI channel</label>
                     <select class="form-control" name="midi-channel" id="midi-channel">
                       <option value="-1">All</option>
+                      <option value="-10">All except drums (10)</option>
                       <option value="0">1</option>
                       <option value="1">2</option>
                       <option value="2">3</option>
@@ -208,7 +209,7 @@
                   <label class="control-label col-xs-5 col-sm-4 col-md-3">Enable sound</label>
                   <div class="col-xs-6 col-sm-7 col-md-8">
                     <div class="checkbox">
-                      <label><input name="sound-on" id="sound-on" type="checkbox"> <i class="fa fa-lg fa-volume-off"></i></label>
+                      <label><input name="sound-on" id="sound-on" type="checkbox"> <i class="fa fa-lg fa-fw fa-volume-off"  style="text-align: left"></i></label>
                     </div>
                   </div>
                 </div>
