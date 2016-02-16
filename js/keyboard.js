@@ -51,7 +51,7 @@ var keyboard = (function() {
 
     var note = getPitchFromKeyboardEvent(event);
     if (note != null) {
-      tonnetz.noteOn(getChannel(), note);
+      tonnetz.noteOn(16, note);
     }
   };
 
@@ -60,7 +60,7 @@ var keyboard = (function() {
 
     var note = getPitchFromKeyboardEvent(event);
     if (note != null) {
-      tonnetz.noteOff(getChannel(), note);
+      tonnetz.noteOff(16, note);
     }
   };
 

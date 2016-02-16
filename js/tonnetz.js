@@ -28,6 +28,7 @@ var tonnetz = (function() {
       sustain = false;
 
   var SQRT_3 = Math.sqrt(3);
+  var CHANNELS = 17;  // the 17th channel is for the computer keyboard
 
 
   module.init = function() {
@@ -43,7 +44,7 @@ var tonnetz = (function() {
       };
     });
 
-    channels = $.map(Array(16), function(_, i) {
+    channels = $.map(Array(CHANNELS), function(_, i) {
       return {
         'number': i,
         'pitches': {},
@@ -58,6 +59,8 @@ var tonnetz = (function() {
 
 
   module.noteOn = function(c, pitch) {
+    audio.noteOn(c, pitch);
+
     if (!(pitch in channels[c].pitches)) {
       var i = pitch%12;
       tones[i].state = STATE_ON;
@@ -77,6 +80,8 @@ var tonnetz = (function() {
   };
 
   module.noteOff = function(c, pitch) {
+    audio.noteOff(c, pitch);
+
     if (pitch in channels[c].pitches) {
       var i = pitch%12;
       delete channels[c].pitches[pitch];
@@ -104,6 +109,8 @@ var tonnetz = (function() {
   };
 
   module.allNotesOff = function(c) {
+    audio.allNotesOff(c);
+
     for (var i=0; i<12; i++) {
       delete tones[i].byChannel[c];
       delete tones[i].channelsSust[c];
@@ -141,7 +148,7 @@ var tonnetz = (function() {
   };
 
   module.panic = function() {
-    for (var i=0; i<16; i++) {
+    for (var i=0; i<CHANNELS; i++) {
       this.sustainOff(i);
       this.allNotesOff(i);
     }

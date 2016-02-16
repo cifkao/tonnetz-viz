@@ -9,6 +9,7 @@ $(function(){
 
   storage.init();
   colorscheme.init('default');
+  audio.init();
   tonnetz.init();
   midi.init();
   keyboard.init();
