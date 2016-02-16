@@ -82,6 +82,10 @@ a:link.external:after {
   z-index: 2;
 }
 
+#panic {
+  margin-bottom: 10px;
+}
+
 
 #messages-container {
   position: absolute;
