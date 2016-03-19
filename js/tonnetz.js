@@ -16,7 +16,7 @@ var tonnetz = (function() {
       H,  // height
       u;  // unit distance (distance between neighbors)
 
-  module.density = 16;
+  module.density = 22;
   module.ghostDuration = 500;
   module.layout = LAYOUT_RIEMANN;
 
