@@ -15,10 +15,13 @@ var keyboard = (function() {
      'Q':-32, 'W':-25, 'E':-18, 'R':-11,'T':-4,'Y':3, 'U':10, 'I':17, 'O':24, 'P':31,
       'A':-28, 'S':-21, 'D':-14, 'F':-7, 'G':0, 'H':7, 'J':14, 'K':21, 'L':28,
        'Z':-24, 'X':-17, 'C':-10, 'V':-3, 'B':4, 'N':11,'M':18
-    }
+    },
   }
 
-  var BASE_PITCH = 60;  // middle C
+  var BASE_PITCH = {
+    'piano': 60, // middle C
+    'riemann': 72,
+  };
 
   module.init = function(layout) {
     this.layout = layout;
@@ -31,7 +34,7 @@ var keyboard = (function() {
   };
 
   var getPitchFromKeyboardEvent = function(event) {
-    var note = BASE_PITCH + LAYOUTS[module.layout][event.which];
+    var note = BASE_PITCH[module.layout] + LAYOUTS[module.layout][event.which];
 
     if (isFinite(note) && !event.ctrlKey && !event.altKey && !event.metaKey)
       return note;
