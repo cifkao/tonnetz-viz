@@ -12,7 +12,7 @@ $(function(){
   audio.init();
   tonnetz.init();
   midi.init();
-  keyboard.init();
+  keyboard.init('piano');
 
   $('#tonnetz').mousewheel(function(event) {
     tonnetz.setDensity(tonnetz.density - event.deltaY);
@@ -68,6 +68,10 @@ $(function(){
   $('input[type=radio][name=layout]').change(function() {
     tonnetz.setLayout($(this).val());
   });
+  $('input[type=radio][name=kbd-layout]').change(function() {
+    keyboard.layout = $(this).val();
+    tonnetz.panic();
+  });
 
   $('[data-toggle="tooltip"]').tooltip();
 
@@ -115,7 +119,7 @@ function showAlert(text, type) {
   $('#messages').append(a);
   a.addClass('in');
 
-  var numMessages = $('#messages').children().length; 
+  var numMessages = $('#messages').children().length;
   if (numMessages > 3) {
     $('#messages').children().slice(0, numMessages-3).alert('close');
   }

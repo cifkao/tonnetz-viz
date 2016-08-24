@@ -3,34 +3,35 @@ var keyboard = (function() {
 
   var module = {};
 
-  var KEYBOARD_NOTES = {
-    /* A */ 65: 0,
-    /* W */ 87: 1,
-    /* S */ 83: 2,
-    /* E */ 69: 3,
-    /* D */ 68: 4,
-    /* F */ 70: 5,
-    /* T */ 84: 6,
-    /* G */ 71: 7,
-    /* Y */ 89: 8,
-    /* Z */ 90: 8,
-    /* H */ 72: 9,
-    /* U */ 85: 10,
-    /* J */ 74: 11,
-    /* K */ 75: 12,
-    /* O */ 79: 13,
-    /* L */ 76: 14,
-  };
+  var LAYOUTS = {
+    'piano': {
+           'W': 1, 'E': 3,         'T': 6, 'Y': 8, 'U': 10,          'O': 13,
+    'A': 0, 'S': 2, 'D': 4, 'F': 5, 'G': 7, 'H': 9, 'J': 11, 'K': 12, 'L': 14,
+     'Z': 8,
+    },
+
+    'riemann': {
+    '1':-36, '2':-29, '3':-22, '4':-15,'5':-8,'6':-1,'7':6,  '8':13, '9':20, '0':27,
+     'Q':-32, 'W':-25, 'E':-18, 'R':-11,'T':-4,'Y':3, 'U':10, 'I':17, 'O':24, 'P':31,
+      'A':-28, 'S':-21, 'D':-14, 'F':-7, 'G':0, 'H':7, 'J':14, 'K':21, 'L':28,
+       'Z':-24, 'X':-17, 'C':-10, 'V':-3, 'B':4, 'N':11,'M':18
+    }
+  }
 
   var BASE_PITCH = 60;  // middle C
 
-  module.init = function() {
+  module.init = function(layout) {
+    this.layout = layout;
+
+    for (var l in LAYOUTS)
+      charsToKeyCodes(LAYOUTS[l]);
+
     $(window).keydown(onKeyDown);
     $(window).keyup(onKeyUp);
   };
 
   var getPitchFromKeyboardEvent = function(event) {
-    var note = BASE_PITCH + KEYBOARD_NOTES[event.which];
+    var note = BASE_PITCH + LAYOUTS[module.layout][event.which];
 
     if (isFinite(note) && !event.ctrlKey && !event.altKey && !event.metaKey)
       return note;
@@ -63,6 +64,26 @@ var keyboard = (function() {
     if (note != null) {
       tonnetz.noteOff(16, note);
       return false;
+    }
+  };
+
+  var charsToKeyCodes = function(mapping) {
+    // map letters
+    var offset = 'A'.charCodeAt(0);
+    for (var i = 0; i < 26; i++) {
+      var c = String.fromCharCode(offset + i);
+      if (c in mapping) {
+        mapping[c.charCodeAt(0)] = mapping[c];
+      }
+    }
+
+    // map numbers
+    offset = '0'.charCodeAt(0);
+    for (i = 0; i < 10; i++) {
+      c = String.fromCharCode(offset + i);
+      if (c in mapping) {
+        mapping[c.charCodeAt(0)] = mapping[c];
+      }
     }
   };
 
