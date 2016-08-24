@@ -17,83 +17,32 @@ var midi = (function() {
 
   var onMIDIInit = function(mAccess) {
     midiAccess = mAccess;
-
-    // Get last used port ID from local storage.
-    var preferredPort = storage.get('midiPort');
-
-    // Add all MIDI ports to the dropdown box.
-    midiAccess.inputs.forEach(function(port) {
-      addMIDIPort(port);
-      if (port.id == preferredPort) {
-        $('#midi-port').val(port.id);
-      }
-    });
-
+    midiAccess.inputs.forEach(addMIDIPort);
     midiAccess.addEventListener('statechange', MIDIConnectionEventListener);
-    $('#midi-port').change(onMIDIPortChange);
-    $('#midi-channel').change(onMIDIChannelChange);
-    onMIDIPortChange();
   };
 
   var onMIDIReject = function(err) {
     showError('Failed to obtain access to MIDI.');
   };
 
-  var onMIDIPortChange = function() {
-    var id = $('#midi-port').val();
-    var currentId = (port != null ? port.id : null);
-
-    if (id != currentId) {
-      if (port != null) {
-        port.removeEventListener('midimessage', MIDIMessageEventListener); 
-        tonnetz.panic();
-      }
-
-      port = midiAccess.inputs.get(id);
-
-      if (port != null) {
-        port.addEventListener('midimessage', MIDIMessageEventListener);
-        console.log('Listening on port ' + port.name);
-
-        storage.set('midiPort', port.id);
-      }
-    }
-  };
-
-  var onMIDIChannelChange = function() {
-    var currentChannel = channel;
-    channel = Number($('#midi-channel').val());
-
-    if (channel != currentChannel)
-      tonnetz.panic();
-  };
-
   var MIDIConnectionEventListener = function(event) {
     var port = event.port;
     if (port.type != 'input') return;
 
-    var portOption = $('#midi-port option').filter(function() {
-      return $(this).attr('value') == port.id;
-    });
-
-    if (portOption.length > 0 && port.state == 'disconnected') {
-      showWarning(port.name + ' was disconnected.');
-
-      portOption.remove();
-      onMIDIPortChange();
-    } else if (portOption.length == 0 && port.state == 'connected') {
-      showSuccess(port.name + ' is connected.');
-
+    if (port.state == 'disconnected')
+      removeMIDIPort(port);
+    else if (port.state == 'connected')
       addMIDIPort(port);
-      onMIDIPortChange();
-    }
+  };
+
+  var removeMIDIPort = function(port) {
+      port.removeEventListener('midimessage', MIDIMessageEventListener); 
+      tonnetz.panic();
   };
 
   var addMIDIPort = function(port) {
-    $('#midi-port')
-      .append($("<option></option>")
-      .attr("value", port.id)
-      .text(port.name));
+      port.addEventListener('midimessage', MIDIMessageEventListener);
+      tonnetz.panic();
   };
 
   var MIDI_NOTE_ON           = 0x90,
