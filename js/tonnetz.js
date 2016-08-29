@@ -358,6 +358,14 @@ var tonnetz = (function() {
         ctx.strokeStyle = colorscheme.stroke[tones[tone].state];
         toneGrid[tone][i].label.className = 'state-' + STATE_NAMES[tones[tone].state];
 
+        if (Object.keys(channels[1].pitches).map(p => p % 12).includes(tone)) {
+          ctx.fillStyle = '#c55c10';
+          ctx.strokeStyle = '#ffbe3c';
+          toneGrid[tone][i].label.style.color = ctx.strokeStyle;
+        } else {
+          toneGrid[tone][i].label.style.color = null;
+        }
+
         if (tones[tone].state == STATE_OFF) {
           ctx.lineWidth = 1;
         } else {
