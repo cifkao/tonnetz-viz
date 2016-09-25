@@ -3,9 +3,9 @@ colorscheme.addScheme("apollo", {
   "background": "#e9edea",
   "nodes": {
     "OFF": {
-      "label": "#c0c0c0",
+      "label": "#b0b0b0",
       "fill": "#e9edea",
-      "stroke": "#c0c0c0"
+      "stroke": "#aaaaaa"
     },
     "GHOST": {
       "label": "#eef1ef",
