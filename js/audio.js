@@ -39,6 +39,8 @@ var audio = (function() {
   var audioCtx, notes, gain;
   var enabled = false;
   var synthType;
+  var tuning = "et";
+  var base_tuning = 36;
 
   var CHANNELS = 17;
   var ATTACK = 0.05;
@@ -65,6 +67,14 @@ var audio = (function() {
 
     $('#synth-type').change(function() {
       synthType = $(this).val();
+    }).change();
+    
+    $('#tuning').change(function() {
+      tuning = $(this).val();
+    }).change();
+
+    $('#base_tuning').change(function() {
+      base_tuning = $(this).val();
     }).change();
 
     $('#gain').on('input change propertychange paste', function() {
@@ -101,7 +111,29 @@ var audio = (function() {
   };
 
   var pitchToFrequency = function(pitch) {
-    return Math.pow(2, (pitch - 69)/12) * 440;
+    if (tuning == "et") {
+      return Math.pow(2, (pitch - 69)/12) * 440;
+    } else if (tuning == "pyth") {
+	var tuned_freq = Math.pow(2, (base_tuning - 69)/12) * 440;
+    
+	var ratios = new Array(1, 256/243, 9/8, 32/27, 81/64, 4/3, 729/512, 3/2, 128/81, 27/16, 16/9, 243/128);
+
+	var i;
+	i = (pitch-base_tuning)%12;
+	var oct = Math.floor((pitch-base_tuning)/12);
+
+      return Math.pow(2, oct) * ratios[i] * tuned_freq;
+    } else {
+      var tuned_freq = Math.pow(2, (base_tuning - 69)/12) * 440;
+    
+      var ratios = new Array(1, 25/24, 9/8, 6/5, 5/4, 4/3, 45/32, 3/2, 8/5, 5/3, 9/5, 15/8);
+
+      var i;
+      i = (pitch-base_tuning)%12;
+      var oct = Math.floor((pitch-base_tuning)/12);
+
+      return Math.pow(2, oct) * ratios[i] * tuned_freq;
+    }
   };
 
   return module;
