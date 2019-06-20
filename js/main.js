@@ -80,16 +80,6 @@ $(function(){
     window.open($(this)[0].href);
     event.preventDefault();
   });
-
-  // Generate mailto: link
-  $('a[href="mailto:"]').attr('href', (function() {
-    var addr = '';
-    var i = 0;
-    do {
-      addr += 'oafcn@kodcamri.'[i%15];
-    } while ((i += 4) < 60);
-    return 'mailto:' + addr;
-  })());
 });
 
 function collapseNav() {
