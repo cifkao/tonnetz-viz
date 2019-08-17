@@ -80,6 +80,10 @@ $(function(){
     window.open($(this)[0].href);
     event.preventDefault();
   });
+
+  $('#show-unit-cell').click(function() {
+    tonnetz.draw(true);
+  });
 });
 
 function collapseNav() {

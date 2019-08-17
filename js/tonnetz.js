@@ -330,6 +330,11 @@ var tonnetz = (function() {
       }
     }
 
+    // Draw unit cell, if checkbox is checked.
+    if ($('#show-unit-cell').is(":checked")){
+      drawUnitCell(ctx);
+    };
+
     // Draw edges. Each vertex takes care of the three upward edges.
     for (var tone=0; tone<12; tone++) {
       var c = tones[tone].cache;
@@ -444,6 +449,34 @@ var tonnetz = (function() {
 
     // Add the node to the grid.
     toneGrid[tone].push(node);
+  };
+
+  var drawUnitCell = function(ctx) {
+    var A = 9; // This is tone A
+
+    // to identify the closest A note to the center of the canvas
+    var distances = $.map(toneGrid[A], function(d){
+      return Math.sqrt((d.x - W/2)**2 + (d.y - H/2)**2);
+    });
+    // index of minimum distance
+    var i = distances.indexOf(Math.min.apply(Math, distances));
+    setTranslate(ctx, toneGrid[A][i].x, toneGrid[A][i].y);
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    if (module.layout == LAYOUT_RIEMANN) {
+      ctx.lineTo(3.5*u, -SQRT_3*u/2);
+      ctx.lineTo(2*u, -4*SQRT_3*u/2);
+      ctx.lineTo(-1.5*u, -3*SQRT_3*u/2);
+    } else if (module.layout == LAYOUT_SONOME) {
+      ctx.lineTo(-SQRT_3*u/2, -3.5*u);
+      ctx.lineTo(-2*SQRT_3*u, -2*u);
+      ctx.lineTo(-3*SQRT_3*u/2, 1.5*u);
+    }
+    ctx.lineTo(0, 0);
+    ctx.strokeStyle = colorscheme.stroke[0];
+    ctx.lineWidth = 4;
+    ctx.stroke();
   };
 
   module.rebuild = function() {
