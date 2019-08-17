@@ -256,7 +256,7 @@ var tonnetz = (function() {
 
     colorscheme.update();
 
-    var xUnit = u*Math.sqrt(3)/2;
+    var xUnit = u*SQRT_3/2;
     var uW = Math.ceil(Math.ceil(W/xUnit*2)/2);
     var uH = Math.ceil(H/u);
 
