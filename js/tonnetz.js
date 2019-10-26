@@ -19,6 +19,7 @@ var tonnetz = (function() {
   module.density = 22;
   module.ghostDuration = 500;
   module.layout = LAYOUT_RIEMANN;
+  module.unitCellVisible = false;
 
   var toneGrid = [];
   var tones;
@@ -186,6 +187,11 @@ var tonnetz = (function() {
     this.rebuild();
   };
 
+  module.toggleUnitCell = function() {
+    this.unitCellVisible = !this.unitCellVisible;
+    this.draw();
+  };
+
 
   var releaseTone = function(tone) {
     tone.release = new Date();
@@ -256,7 +262,7 @@ var tonnetz = (function() {
 
     colorscheme.update();
 
-    var xUnit = u*Math.sqrt(3)/2;
+    var xUnit = u*SQRT_3/2;
     var uW = Math.ceil(Math.ceil(W/xUnit*2)/2);
     var uH = Math.ceil(H/u);
 
@@ -329,6 +335,10 @@ var tonnetz = (function() {
         }
       }
     }
+
+    if (module.unitCellVisible){
+      drawUnitCell(ctx);
+    };
 
     // Draw edges. Each vertex takes care of the three upward edges.
     for (var tone=0; tone<12; tone++) {
@@ -444,6 +454,27 @@ var tonnetz = (function() {
 
     // Add the node to the grid.
     toneGrid[tone].push(node);
+  };
+
+  var drawUnitCell = function(ctx) {
+    var closest = getNeighborXYDiff(0,3);
+    setTranslate(ctx, W/2-closest.x, H/2-closest.y);
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    if (module.layout == LAYOUT_RIEMANN) {
+      ctx.lineTo(1.5*u, 3*SQRT_3*u/2);
+      ctx.lineTo(3.5*u, -1*SQRT_3*u/2);
+      ctx.lineTo(2*u, -4*SQRT_3*u/2);
+    } else if (module.layout == LAYOUT_SONOME) {
+      ctx.lineTo(-2*SQRT_3*u, -2*u);
+      ctx.lineTo(-3.5*SQRT_3*u, -0.5*u);
+      ctx.lineTo(-1.5*SQRT_3*u, 1.5*u);
+    }
+    ctx.lineTo(0, 0);
+    ctx.strokeStyle = colorscheme.stroke[0];
+    ctx.lineWidth = 4;
+    ctx.stroke();
   };
 
   module.rebuild = function() {
