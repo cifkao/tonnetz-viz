@@ -58,6 +58,7 @@ $(function(){
   $('#enable-sustain').click(function() { tonnetz.toggleSustainEnabled(); });
   $('#show-note-names').click(function() { $(noteLabels).toggle(); });
   $('#show-triad-names').click(function() { $(triadLabels).toggle(); });
+  $('#show-unit-cell').click(function() { tonnetz.toggleUnitCell(); });
   $('#ghost-duration').on('input change propertychange paste', function() {
     if(!tonnetz.setGhostDuration($(this).val())) {
       $(this).closest('.form-group').addClass('has-error');
@@ -79,10 +80,6 @@ $(function(){
   $('body').on('click', 'a[data-popup]', function(event) {
     window.open($(this)[0].href);
     event.preventDefault();
-  });
-
-  $('#show-unit-cell').click(function() {
-    tonnetz.draw(true);
   });
 });
 

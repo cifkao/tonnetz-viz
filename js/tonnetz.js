@@ -19,6 +19,7 @@ var tonnetz = (function() {
   module.density = 22;
   module.ghostDuration = 500;
   module.layout = LAYOUT_RIEMANN;
+  module.unitCellVisible = false;
 
   var toneGrid = [];
   var tones;
@@ -186,6 +187,11 @@ var tonnetz = (function() {
     this.rebuild();
   };
 
+  module.toggleUnitCell = function() {
+    this.unitCellVisible = !this.unitCellVisible;
+    this.draw();
+  };
+
 
   var releaseTone = function(tone) {
     tone.release = new Date();
@@ -330,8 +336,7 @@ var tonnetz = (function() {
       }
     }
 
-    // Draw unit cell, if checkbox is checked.
-    if ($('#show-unit-cell').is(":checked")){
+    if (module.unitCellVisible){
       drawUnitCell(ctx);
     };
 
