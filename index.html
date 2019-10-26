@@ -11,10 +11,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>TonnetzViz | Real-Time MIDI Visualization</title>
+    <title>TonnetzViz | Online MIDI Visualization</title>
 
     <link rel="canonical" href="https://cifkao.github.io/tonnetz-viz/" >
     <meta name="description" content="TonnetzViz is a web-based music visualizer that receives MIDI input and visualizes it in real time using a tonal network called the Tonnetz.">
+    <meta name="keywords" content="tonnetz, online, midi, visualizer, visualization, generator">
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
@@ -204,13 +205,16 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="control-label col-xs-5 col-sm-4 col-md-3">Labels</label>
+                  <label class="control-label col-xs-5 col-sm-4 col-md-3">Show/hide</label>
                   <div class="col-xs-6 col-sm-7 col-md-8">
                     <div class="checkbox">
-                      <label><input name="show-note-names" id="show-note-names" type="checkbox" checked> Show tone names</label>
+                      <label><input name="show-note-names" id="show-note-names" type="checkbox" checked> Tone names</label>
                     </div>
                     <div class="checkbox">
-                      <label><input name="show-triad-names" id="show-triad-names" type="checkbox"> Show triad names</label>
+                      <label><input name="show-triad-names" id="show-triad-names" type="checkbox"> Triad names</label>
+                    </div>
+                    <div class="checkbox">
+                      <label><input name="show-unit-cell" id="show-unit-cell" type="checkbox"> Unit cell</label>
                     </div>
                   </div>
                 </div>
@@ -329,6 +333,8 @@
               <ul class="fa-ul">
                 <li><i class="fa-li fa fa-lg fa-flask"></i>Created by
                   <a href="https://ondrej.cifka.com" class="external" data-popup="true">Ondřej Cífka</a> in 2016</li>
+                <li><i class="fa-li fa fa-lg fa-users"></i>Contributions by
+                  <a href="https://github.com/Aknin" class="external" data-popup="true">Achille Aknin</a> and <a href="https://github.com/chumo" class="external" data-popup="true">Jesús Martínez-Blanco</a></li>
                 <li><i class="fa-li fa fa-lg fa-code"></i>Source code:
                   <a href="https://github.com/cifkao/tonnetz-viz" class="external" data-popup="true">GitHub</a></li>
                 <li><i class="fa-li fa fa-lg fa-youtube-play"></i>Videos:
